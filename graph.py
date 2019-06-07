@@ -320,7 +320,7 @@ class Graph:
         Computes the minimum spanning tree of the graph using
         Prim's algorithm.
 
-        :return The minimum spanning tree (in a list of connecting edges).
+        :return: The minimum spanning tree (in a list of connecting edges).
         """
 
         V = self.get_vertices()
@@ -348,6 +348,15 @@ class Graph:
         return mst
 
     def topological_sort(self):
+        """
+        Computes the topological sort of the graph.
+        Will return None if no such sorting exists (i.e. there are cycles).
+        Assumption(s):
+            The graph is a directed and acyclic.
+        
+        :return: A list of the vertices sorted in topological order, if it exists.
+        """
+
         assert self.directed
         new_G = self.duplicate()
 
