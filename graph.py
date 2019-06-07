@@ -20,6 +20,18 @@ class Graph:
         self.directed = directed
         self.weighted = weighted
 
+    def duplicate(self):
+        """
+        Creates a copy of the graph.
+        """
+
+        new_G = Graph(self.directed, self.weighted)
+        new_G.vertices = self.vertices
+        new_G.edges = self.edges
+        new_G.edge_values = self.edge_values
+        
+        return new_G
+
     def get_vertices(self):
         """
         Grabs the set of vertices of the graph.
@@ -48,7 +60,11 @@ class Graph:
         """
         assert self.has_vertex(a) and self.has_vertex(b)
 
-        for edge in [(a, b), (b, a)]:
+        edges = [(a, b)]
+        if not self.directed:
+            edges.append((b, a))
+
+        for edge in edges:
             start_vertex, end_vertex = edge
             neighbors = self.get_neighbors(start_vertex)
             if end_vertex in neighbors:
@@ -65,6 +81,24 @@ class Graph:
         assert self.has_vertex(vertex)
 
         return self.edges[vertex]
+
+    def get_incoming_vertices(self, vertex):
+        """
+        Grabs the verticies that connect to the vertex.
+        i.e. (a, vertex) for all vertices a
+        Assumption(s):
+            "vertex" exists in the graph.
+
+        :param vertex: Node to be checked.
+        :return: A list of all incoming vertices.
+        """
+        V = set(self.get_vertices())
+        V = V.difference([vertex])
+        incoming_vertices = map(lambda neighbor: (neighbor, self.is_adjacent(neighbor, vertex)), V)
+        incoming_vertices = filter(lambda x: x[1], incoming_vertices)
+        incoming_vertices = map(lambda x: x[0], incoming_vertices)
+
+        return list(incoming_vertices)
 
     def has_vertex(self, vertex):
         """
@@ -138,8 +172,10 @@ class Graph:
         self.edges[a] = self.edges[a].difference(set([b]))
         self.edges[b] = self.edges[b].difference(set([a]))
 
-        del self.edge_values[(a, b)]
-        del self.edge_values[(b, a)]
+        if (a, b) in self.edge_values:
+            del self.edge_values[(a, b)]
+        if (b, a) in self.edge_values:
+            del self.edge_values[(b, a)]
 
     def get_edge_value(self, a, b):
         """
@@ -311,3 +347,33 @@ class Graph:
 
         return mst
 
+    def topological_sort(self):
+        assert self.directed
+        new_G = self.duplicate()
+
+        L = []
+        
+        V = set(new_G.get_vertices())
+        S = set([])
+        for v in V:
+            incoming_neighbors = new_G.get_incoming_vertices(v)
+            if len(incoming_neighbors) == 0:
+                S.add(v)
+
+        while len(S) != 0:
+            n = S.pop()
+            L.append(n)
+
+            neighbors = new_G.get_neighbors(n)
+            for neighbor in neighbors:
+                new_G.remove_edge(n, neighbor)
+                incoming_vertices = new_G.get_incoming_vertices(neighbor)
+                if len(incoming_vertices) == 0:
+                    S.add(neighbor)
+    
+        edges = new_G.get_edges()
+        for v, neighbors in edges.items():
+            if len(neighbors) != 0:
+                return None
+        
+        return L
