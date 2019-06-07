@@ -3,6 +3,39 @@ from functools import reduce
 
 INFINITY = float("inf")
 
+def takeWhile(f, xx):
+    """
+    takeWhile from Haskell.
+    
+    :param f:  Function to use over the list.
+    :param xx: List to be taken from.
+    :return:   Prefix of the list that satisfies the predicate, f.
+    """
+
+    idx = 0
+    while f(xx[idx]):
+        idx += 1
+
+    return xx[:idx]
+
+
+def dropWhile(f, xx):
+    """
+    dropWhile from Haskell.
+    
+    :param f:  Function to use over the list.
+    :param xx: List to be dropped from.
+    :return:   The list without the prefix that 
+               satisfies the predicate, f.
+    """
+    
+    idx = 0
+    while f(xx[idx]):
+        idx += 1
+
+    return xx[idx:]
+
+
 def foldl(f, z, xx):
     """
     foldl from Haskell.
@@ -30,6 +63,20 @@ def foldr(f, z, xx):
 
 
 def k_largest_elements(v, k):
+    """
+    Extracts the k largest elements of a list.
+    They are put in descending order.
+    
+    Assumption(s):
+        1 <= k <= len(v)
+    
+    :param v: List of elements.
+    :param k: Number of largest elements to extract.
+    :return:  A list of the k largest elements.
+    """
+    
+    assert 1 <= k and k <= len(v)
+    
     min_heap = []
     for idx in range(k):
         heapq.heappush(min_heap, v[idx])
@@ -51,6 +98,19 @@ def k_largest_elements(v, k):
 
 
 def kth_largest_element(v, k):
+    """
+    Extracts the k-th largest element of a list.
+    
+    Assumption(s):
+        1 <= k <= len(v)
+    
+    :param v: List of elements.
+    :param k: Index of the largest element to extract.
+    :return:  k-th largest element of the list.
+    """
+    
+    assert 1 <= k and k <= len(v)
+    
     min_heap = []
     for idx in range(k):
         heapq.heappush(min_heap, v[idx])
@@ -66,6 +126,20 @@ def kth_largest_element(v, k):
 
 
 def k_smallest_elements(v, k):
+    """
+    Extracts the k largest elements of a list.
+    They are put in ascending order.
+    
+    Assumption(s):
+        1 <= k <= len(v)
+    
+    :param v: List of elements.
+    :param k: Number of smallest elements to extract.
+    :return:  A list of the k smallest elements.
+    """
+    
+    assert 1 <= k and k <= len(v)
+    
     max_heap = []
     for idx in range(k):
         heapq.heappush(max_heap, -v[idx])
@@ -87,6 +161,19 @@ def k_smallest_elements(v, k):
 
 
 def kth_smallest_element(v, k):
+    """
+    Extracts the k-th smallest element of a list.
+    
+    Assumption(s):
+        1 <= k <= len(v)
+    
+    :param v: List of elements.
+    :param k: Index of the smallest element to extract.
+    :return:  k-th smallest element of the list.
+    """
+    
+    assert 1 <= k and k <= len(v)
+    
     max_heap = []
     for idx in range(k):
         heapq.heappush(max_heap, -v[idx])
