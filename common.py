@@ -1,6 +1,7 @@
 import heapq    # min-heap by default, negate values for max-heap
 from functools import reduce
 
+INFINITY = float("inf")
 
 def foldl(f, z, xx):
     """
