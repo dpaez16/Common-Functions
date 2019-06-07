@@ -3,10 +3,28 @@ from functools import reduce
 
 
 def foldl(f, z, xx):
+    """
+    foldl from Haskell.
+    
+    :param f:  Function to fold over the list.
+    :param z:  Starting value to fold over.
+    :param xx: List that will be folded over.
+    :return:   Value of the fold.
+    """
+    
     return reduce(lambda x, y: f(x, y), xx, z)
 
 
 def foldr(f, z, xx):
+    """
+    foldr from Haskell.
+    
+    :param f:  Function to fold over the list.
+    :param z:  Starting value to fold over.
+    :param xx: List that will be folded over.
+    :return:   Value of the fold.
+    """
+    
     return reduce(lambda x, y: f(y, x), xx, z)
 
 
