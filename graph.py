@@ -273,7 +273,7 @@ class Graph:
         vertices_traversed = []
 
         vertices = self.get_vertices()
-        for vertex in [v] + vertices:
+        for vertex in vertices:
             vertex.set_data("visited", False)
 
         stack = [v]
@@ -308,7 +308,7 @@ class Graph:
         vertices_traversed = []
 
         vertices = self.get_vertices()
-        for vertex in [v] + vertices:
+        for vertex in vertices:
             vertex.set_data("visited", False)
 
         queue = [v]
@@ -479,6 +479,7 @@ class Graph:
             visit(v)
 
         component_count = 0
+        L = L[::-1]
         for u_ in L:
             stack = [(u_, u_)]
             while len(stack) != 0:
