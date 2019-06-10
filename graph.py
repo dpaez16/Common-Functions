@@ -15,21 +15,21 @@ class Graph:
         """
         Default constructor that initializes the graph
         """
-        self.vertices = set([])
-        self.edges = {}
-        self.edge_values = {}
-        self.directed = directed
-        self.weighted = weighted
+        self._vertices = set([])
+        self._edges = {}
+        self._edge_values = {}
+        self._directed = directed
+        self._weighted = weighted
 
     def duplicate(self):
         """
         Creates a copy of the graph.
         """
 
-        new_G = Graph(self.directed, self.weighted)
-        new_G.vertices = self.vertices
-        new_G.edges = self.edges
-        new_G.edge_values = self.edge_values
+        new_G = Graph(self._directed, self._weighted)
+        new_G._vertices = self._vertices
+        new_G._edges = self._edges
+        new_G._edge_values = self._edge_values
         
         return new_G
 
@@ -58,7 +58,7 @@ class Graph:
         :return: Boolean value indiciating whether the graph is empty.
         """
 
-        return len(self.vertices) == 0
+        return len(self._vertices) == 0
 
     def get_vertices(self):
         """
@@ -66,7 +66,7 @@ class Graph:
 
         :return: Set of vertices stored internally.
         """
-        return list(self.vertices)
+        return list(self._vertices)
 
     def get_edges(self):
         """
@@ -74,7 +74,7 @@ class Graph:
 
         :return: Edge dictionary stored internally.
         """
-        return self.edges
+        return self._edges
 
     def is_adjacent(self, a, b):
         """
@@ -89,7 +89,7 @@ class Graph:
         assert self.has_vertex(a) and self.has_vertex(b)
 
         edges = [(a, b)]
-        if not self.directed:
+        if not self._directed:
             edges.append((b, a))
 
         for edge in edges:
@@ -113,7 +113,7 @@ class Graph:
         assert self.has_vertex(a) and self.has_vertex(b)
         assert self.is_adjacent(a, b)
 
-        if not self.directed():
+        if not self._directed():
             return
 
         edge_val = self.get_edge_value(a, b)
@@ -131,7 +131,7 @@ class Graph:
         """
         assert self.has_vertex(vertex)
 
-        return self.edges[vertex]
+        return self._edges[vertex]
 
     def get_incoming_vertices(self, vertex):
         """
@@ -158,7 +158,7 @@ class Graph:
         :param vertex: Vertex to be checked for existence.
         :return: True if the vertex is in the graph.
         """
-        return vertex in self.vertices
+        return vertex in self._vertices
 
     def add_vertex(self, vertex):
         """
@@ -169,8 +169,8 @@ class Graph:
         if self.has_vertex(vertex):
             return
 
-        self.vertices.add(vertex)
-        self.edges[vertex] = set([])
+        self._vertices.add(vertex)
+        self._edges[vertex] = set([])
 
     def add_edge(self, a, b, edge_value=None):
         """
@@ -183,14 +183,14 @@ class Graph:
         for vertex in [a, b]:
             self.add_vertex(vertex)
 
-        self.edges[a].add(b)
+        self._edges[a].add(b)
 
-        if not self.directed:
-            self.edges[b].add(a)
+        if not self._directed:
+            self._edges[b].add(a)
 
-        if self.weighted:
+        if self._weighted:
             self.set_edge_value(a, b, edge_value)
-            if not self.directed:
+            if not self._directed:
                 self.set_edge_value(b, a, edge_value)
 
     def remove_vertex(self, vertex):
@@ -209,7 +209,7 @@ class Graph:
         for neighbor in outgoing_neighbors:
             self.remove_edge(vertex, neighbor)
 
-        self.vertices = self.vertices.difference(set([vertex]))
+        self._vertices = self._vertices.difference(set([vertex]))
 
     def remove_edge(self, a, b):
         """
@@ -221,13 +221,13 @@ class Graph:
         assert self.has_vertex(a) and self.has_vertex(b)
         assert self.is_adjacent(a, b)
 
-        self.edges[a] = self.edges[a].difference(set([b]))
-        self.edges[b] = self.edges[b].difference(set([a]))
+        self._edges[a] = self._edges[a].difference(set([b]))
+        self._edges[b] = self._edges[b].difference(set([a]))
 
-        if (a, b) in self.edge_values:
-            del self.edge_values[(a, b)]
-        if (b, a) in self.edge_values:
-            del self.edge_values[(b, a)]
+        if (a, b) in self._edge_values:
+            del self._edge_values[(a, b)]
+        if (b, a) in self._edge_values:
+            del self._edge_values[(b, a)]
 
     def get_edge_value(self, a, b):
         """
@@ -240,7 +240,7 @@ class Graph:
         assert self.has_vertex(a) and self.has_vertex(b)
         assert self.is_adjacent(a, b)
 
-        return self.edge_values[(a, b)]
+        return self._edge_values[(a, b)]
 
     def set_edge_value(self, a, b, edge_value):
         """
@@ -252,12 +252,12 @@ class Graph:
         """
         assert self.has_vertex(a) and self.has_vertex(b)
         assert self.is_adjacent(a, b)
-        assert self.weighted
+        assert self._weighted
 
-        self.edge_values[(a, b)] = edge_value
+        self._edge_values[(a, b)] = edge_value
 
-        if not self.directed:
-            self.edge_values[(b, a)] = edge_value
+        if not self._directed:
+            self._edge_values[(b, a)] = edge_value
 
     def dfs(self, v):
         """
@@ -411,7 +411,7 @@ class Graph:
         :return: A list of the vertices sorted in topological order, if it exists.
         """
 
-        assert self.directed
+        assert self._directed
         new_G = self.duplicate()
 
         L = []
@@ -441,7 +441,7 @@ class Graph:
         
         return L
 
-    def strong_components(self):
+    def strongly_connected_components(self):
         """
         Computes the graph's strongly connected components.
         Assumption(s):
@@ -450,7 +450,7 @@ class Graph:
         :return: None
         """
         
-        assert self.directed
+        assert self._directed
         
         new_G = self.duplicate()
         V = new_G.get_vertices()
