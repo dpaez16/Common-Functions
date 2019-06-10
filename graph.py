@@ -32,6 +32,33 @@ class Graph:
         
         return new_G
 
+    def reverse(self):
+        """
+        Flips all edges in the graph.
+
+        :return: The reversed graph.
+        """
+
+        rev_G = self.duplicate()
+        if not rev_G.directed:
+            return rev_G
+
+        edges = rev_G.get_edges()
+        for v, neighbors in edges.items():
+            for neighbor in neighbors:
+                rev_G.flip_edge(v, neighbor)
+        
+        return rev_G
+
+    def empty(self):
+        """
+        Returns true if the graph has no vertices (i.e. empty).
+
+        :return: Boolean value indiciating whether the graph is empty.
+        """
+
+        return len(self.vertices) == 0
+
     def get_vertices(self):
         """
         Grabs the set of vertices of the graph.
@@ -70,6 +97,29 @@ class Graph:
             if end_vertex in neighbors:
                 return True
         return False
+
+    def flip_edge(self, a, b):
+        """
+        Flips the edge (a, b) in the graph.
+        Assumption(s):
+            Both vertices (a, b) are in the graph.
+            The edge (a, b) exists in the graph.
+
+        :param a: First vertex of the edge.
+        :param b: Second vertex of the edge.
+        """
+
+        assert self.has_vertex(a) and self.has_vertex(b)
+        assert self.is_adjacent(a, b)
+
+        if not self.directed():
+            return
+
+        edge_val = self.get_edge_value(a, b)
+        self.remove_edge(a, b)
+        self.add_edge(b, a, edge_val)
+
+        return
 
     def get_neighbors(self, vertex):
         """
@@ -123,7 +173,7 @@ class Graph:
 
     def add_edge(self, a, b, edge_value=None):
         """
-        Adds an undirected edge (a, b) to the graph with an edge weight.
+        Adds an (un)directed edge (a, b) to the graph with an edge weight.
 
         :param a: Starting vertex of the edge.
         :param b: Ending vertex of the edge.
@@ -168,6 +218,7 @@ class Graph:
         :param b: Ending vertex of the edge.
         """
         assert self.has_vertex(a) and self.has_vertex(b)
+        assert self.is_adjacent(a, b)
 
         self.edges[a] = self.edges[a].difference(set([b]))
         self.edges[b] = self.edges[b].difference(set([a]))
@@ -186,6 +237,7 @@ class Graph:
         :return: The associated edge value.
         """
         assert self.has_vertex(a) and self.has_vertex(b)
+        assert self.is_adjacent(a, b)
 
         return self.edge_values[(a, b)]
 
@@ -198,6 +250,7 @@ class Graph:
         :param edge_value: Edge value to associate (a, b) with.
         """
         assert self.has_vertex(a) and self.has_vertex(b)
+        assert self.is_adjacent(a, b)
         assert self.weighted
 
         self.edge_values[(a, b)] = edge_value
@@ -386,3 +439,16 @@ class Graph:
                 return None
         
         return L
+
+    def strong_components(self):
+        """
+        Computes the graph's strongly connected components.
+        Assumption(s):
+            Graph is directed.
+
+        :return: None
+        """
+        
+        assert self.directed
+
+        return None
