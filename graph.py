@@ -1,4 +1,5 @@
 from node import Node
+from common import INFINITY
 import random
 
 
@@ -200,15 +201,15 @@ class Graph:
         """
         assert self.has_vertex(vertex)
 
-        neighbors = self.get_neighbors(vertex)
+        incoming_neighbors = self.get_incoming_vertices(vertex)
+        for neighbor in incoming_neighbors:
+            self.remove_edge(neighbor, vertex)
+
+        outgoing_neighbors = self.get_neighbors(vertex)
+        for neighbor in outgoing_neighbors:
+            self.remove_edge(vertex, neighbor)
+
         self.vertices = self.vertices.difference(set([vertex]))
-        del self.edges[vertex]
-
-        for neighbor in neighbors:
-            del self.edge_values[(vertex, neighbor)]
-            del self.edge_values[(neighbor, vertex)]
-
-            self.edges[neighbor] = self.edges[neighbor].difference(set([vertex]))
 
     def remove_edge(self, a, b):
         """
@@ -348,7 +349,7 @@ class Graph:
         assert source in V
 
         for v in V:
-            dist[v] = 1e99
+            dist[v] = INFINITY
             prev[v] = None
             Q.add(v)
         dist[source] = 0
@@ -450,5 +451,53 @@ class Graph:
         """
         
         assert self.directed
+        
+        new_G = self.duplicate()
+        V = new_G.get_vertices()
+        L, components = [], {}
 
-        return None
+        if self.empty():
+            return components
+
+        for v in V:
+            v.set_data("visited", False)
+            v.set_data("component", None)
+
+        def visit(v):
+            if v.get_data()["visited"]:
+                return
+
+            v.set_data("visited", True)
+            neighbors = new_G.get_neighbors(v)
+            for neighbor in neighbors:
+                visit(neighbor)
+
+            L.append(v)
+            return
+        
+        for v in V:
+            visit(v)
+
+        component_count = 0
+        for u_ in L:
+            stack = [(u_, u_)]
+            while len(stack) != 0:
+                u, root = stack.pop()
+                if u.get_data()["component"] is None:
+                    if u == root:
+                        component_count += 1
+                        u.set_data("component", component_count)
+                    else:
+                        u.set_data("component", root.get_data()["component"])
+                    
+                    incoming_vertices = new_G.get_incoming_vertices(u)
+                    for v in incoming_vertices:
+                        stack.append((v, root))
+        
+        for v in L:
+            component = v.get_data()["component"]
+            if component not in components:
+                components[component] = set([])
+            components[component].add(v)
+
+        return components
