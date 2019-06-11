@@ -1,11 +1,15 @@
 from node import Node
 from common import INFINITY
 from copy import deepcopy
+from queue import Queue
+from stack import Stack
 import random
 
 
 class Graph:
     """
+    Interface for creating graphs.
+
     Attributes:
         vertices: Set that holds all vertices.
         edges: Dictionary that associates a vertex with its connected neighbors.
@@ -14,7 +18,7 @@ class Graph:
 
     def __init__(self, directed=False, weighted=False):
         """
-        Default constructor that initializes the graph
+        Default constructor that initializes the graph.
         """
         self._vertices = set([])
         self._edges = {}
@@ -25,6 +29,8 @@ class Graph:
     def duplicate(self):
         """
         Creates a copy of the graph.
+
+        :return: The duplicated graph.
         """
 
         new_G = Graph(self._directed, self._weighted)
@@ -35,16 +41,17 @@ class Graph:
         visited = set([])
 
         for v in V:
-            queue = [v]
-            while len(queue) != 0:
-                curr = queue.pop(0)
+            queue = Queue()
+            queue.push(v)
+            while not queue.empty():
+                curr = queue.pop()
                 if curr in visited:
                     continue
 
                 visited.add(curr)
                 neighbors = self.get_neighbors(curr)
                 for neighbor in neighbors:
-                    queue.append(neighbor)
+                    queue.enqueue(neighbor)
                     edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
                     new_G.add_edge(curr, neighbor, edge_value)
 
@@ -68,16 +75,17 @@ class Graph:
         visited = set([])
 
         for v in V:
-            queue = [v]
-            while len(queue) != 0:
-                curr = queue.pop(0)
+            queue = Queue()
+            queue.push(v)
+            while not queue.empty():
+                curr = queue.pop()
                 if curr in visited:
                     continue
 
                 visited.add(curr)
                 neighbors = self.get_neighbors(curr)
                 for neighbor in neighbors:
-                    queue.append(neighbor)
+                    queue.push(neighbor)
                     edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
                     rev_G.add_edge(neighbor, curr, edge_value)
 
@@ -310,11 +318,10 @@ class Graph:
         vertices = self.get_vertices()
         visited = set([])
 
-        stack = [v]
-        while len(stack) != 0:
-            curr = stack[0]
-            stack = stack[1:]
-
+        stack = Stack()
+        stack.push(v)
+        while not stack.empty():
+            curr = stack.pop()
             if curr in visited:
                 continue
 
@@ -324,7 +331,7 @@ class Graph:
             random.shuffle(neighbors)
 
             for neighbor in neighbors:
-                stack = [neighbor] + stack
+                stack.push(neighbor)
 
         return vertices_traversed
 
@@ -344,11 +351,10 @@ class Graph:
         vertices = self.get_vertices()
         visited = set([])
 
-        queue = [v]
-        while len(queue) != 0:
-            curr = queue[0]
-            queue = queue[1:]
-
+        queue = Queue()
+        queue.push(v)
+        while not queue.empty():
+            curr = queue.pop()
             if curr in visited:
                 continue
 
@@ -358,7 +364,7 @@ class Graph:
             random.shuffle(neighbors)
 
             for neighbor in neighbors:
-                queue.append(neighbor)
+                queue.push(neighbor)
 
         return vertices_traversed
 
@@ -514,8 +520,9 @@ class Graph:
         component_count = 0
         L = L[::-1]
         for u_ in L:
-            stack = [(u_, u_)]
-            while len(stack) != 0:
+            stack = Stack()
+            stack.push((u_, u_))
+            while not stack.empty():
                 root, u = stack.pop()
                 if u.get_data()["component"] is None:
                     if u == root:
@@ -526,7 +533,7 @@ class Graph:
                     
                     neighbors = rev_G.get_neighbors(u)
                     for v in neighbors:
-                        stack.append((root, v))
+                        stack.push((root, v))
         
         for v in L:
             component = v.get_data()["component"]
