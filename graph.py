@@ -48,6 +48,9 @@ class Graph:
                     edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
                     new_G.add_edge(curr, neighbor, edge_value)
 
+                if len(neighbors) == 0:
+                    new_G.add_vertex(curr)
+
         return new_G
 
     def reverse(self):
@@ -57,14 +60,29 @@ class Graph:
         :return: The reversed graph.
         """
 
-        rev_G = self.duplicate()
-        if not rev_G.directed:
-            return rev_G
+        if not self._directed:
+            return self.duplicate()
 
-        edges = rev_G.get_edges()
-        for v, neighbors in edges.items():
-            for neighbor in neighbors:
-                rev_G.flip_edge(v, neighbor)
+        rev_G = Graph(self._directed, self._weighted)
+        V = deepcopy(self.get_vertices())
+        visited = set([])
+
+        for v in V:
+            queue = [v]
+            while len(queue) != 0:
+                curr = queue.pop(0)
+                if curr in visited:
+                    continue
+
+                visited.add(curr)
+                neighbors = self.get_neighbors(curr)
+                for neighbor in neighbors:
+                    queue.append(neighbor)
+                    edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
+                    rev_G.add_edge(neighbor, curr, edge_value)
+
+                if len(neighbors) == 0:
+                    rev_G.add_vertex(curr)
         
         return rev_G
 
@@ -130,7 +148,7 @@ class Graph:
         assert self.has_vertex(a) and self.has_vertex(b)
         assert self.is_adjacent(a, b)
 
-        if not self._directed():
+        if not self._directed:
             return
 
         edge_val = self.get_edge_value(a, b)
@@ -467,23 +485,20 @@ class Graph:
         
         assert self._directed
         
-        new_G = self.duplicate()
-        V = new_G.get_vertices()
+        rev_G = self.reverse()
+        V = rev_G.get_vertices()
         L, components = [], {}
         visited = set([])
 
         if self.empty():
             return components
-
-        for v in V:
-            v.set_data("component", None)
         
         def visit(v):
             if v in visited:
                 return
 
             visited.add(v)
-            neighbors = new_G.get_neighbors(v)
+            neighbors = self.get_neighbors(v)
             for neighbor in neighbors:
                 visit(neighbor)
 
@@ -493,12 +508,15 @@ class Graph:
         for v in V:
             visit(v)
         
+        for v in L:
+            v.set_data("component", None)
+
         component_count = 0
         L = L[::-1]
         for u_ in L:
             stack = [(u_, u_)]
             while len(stack) != 0:
-                u, root = stack.pop()
+                root, u = stack.pop()
                 if u.get_data()["component"] is None:
                     if u == root:
                         component_count += 1
@@ -506,9 +524,9 @@ class Graph:
                     else:
                         u.set_data("component", root.get_data()["component"])
                     
-                    incoming_vertices = new_G.get_incoming_vertices(u)
-                    for v in incoming_vertices:
-                        stack.append((v, root))
+                    neighbors = rev_G.get_neighbors(u)
+                    for v in neighbors:
+                        stack.append((root, v))
         
         for v in L:
             component = v.get_data()["component"]
