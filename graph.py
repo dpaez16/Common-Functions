@@ -1,5 +1,6 @@
 from node import Node
 from common import INFINITY
+from copy import deepcopy
 import random
 
 
@@ -27,10 +28,26 @@ class Graph:
         """
 
         new_G = Graph(self._directed, self._weighted)
-        new_G._vertices = self._vertices
-        new_G._edges = self._edges
-        new_G._edge_values = self._edge_values
-        
+        if self.empty():
+            return new_G
+
+        V = deepcopy(self.get_vertices())
+        visited = set([])
+
+        for v in V:
+            queue = [v]
+            while len(queue) != 0:
+                curr = queue.pop(0)
+                if curr in visited:
+                    continue
+
+                visited.add(curr)
+                neighbors = self.get_neighbors(curr)
+                for neighbor in neighbors:
+                    queue.append(neighbor)
+                    edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
+                    new_G.add_edge(curr, neighbor, edge_value)
+
         return new_G
 
     def reverse(self):
@@ -273,18 +290,17 @@ class Graph:
         vertices_traversed = []
 
         vertices = self.get_vertices()
-        for vertex in vertices:
-            vertex.set_data("visited", False)
+        visited = set([])
 
         stack = [v]
         while len(stack) != 0:
             curr = stack[0]
             stack = stack[1:]
 
-            if curr.get_data()["visited"]:
+            if curr in visited:
                 continue
 
-            curr.set_data("visited", True)
+            visited.add(curr)
             vertices_traversed.append(curr)
             neighbors = list(self.get_neighbors(curr))
             random.shuffle(neighbors)
@@ -308,18 +324,17 @@ class Graph:
         vertices_traversed = []
 
         vertices = self.get_vertices()
-        for vertex in vertices:
-            vertex.set_data("visited", False)
+        visited = set([])
 
         queue = [v]
         while len(queue) != 0:
             curr = queue[0]
             queue = queue[1:]
 
-            if curr.get_data()["visited"]:
+            if curr in visited:
                 continue
 
-            curr.set_data("visited", True)
+            visited.add(curr)
             vertices_traversed.append(curr)
             neighbors = list(self.get_neighbors(curr))
             random.shuffle(neighbors)
@@ -447,7 +462,7 @@ class Graph:
         Assumption(s):
             Graph is directed.
 
-        :return: None
+        :return: Dictionary containing each component.
         """
         
         assert self._directed
@@ -455,29 +470,29 @@ class Graph:
         new_G = self.duplicate()
         V = new_G.get_vertices()
         L, components = [], {}
+        visited = set([])
 
         if self.empty():
             return components
 
         for v in V:
-            v.set_data("visited", False)
             v.set_data("component", None)
-
+        
         def visit(v):
-            if v.get_data()["visited"]:
+            if v in visited:
                 return
 
-            v.set_data("visited", True)
+            visited.add(v)
             neighbors = new_G.get_neighbors(v)
             for neighbor in neighbors:
                 visit(neighbor)
 
             L.append(v)
             return
-        
+       
         for v in V:
             visit(v)
-
+        
         component_count = 0
         L = L[::-1]
         for u_ in L:
@@ -500,5 +515,6 @@ class Graph:
             if component not in components:
                 components[component] = set([])
             components[component].add(v)
+            v.delete_data("component")
 
         return components

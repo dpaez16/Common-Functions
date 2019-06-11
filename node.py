@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class Node:
     def __init__(self, value, id_num, **kwargs):
         """
@@ -29,6 +32,21 @@ class Node:
         """
         self.data[key] = value
 
+    def delete_data(self, key):
+        """
+        Deletes a piece of data in a Node.
+
+        :param key: Name of label to be deleted.
+        """
+        if key not in self.data:
+            return
+        
+        del self.data[key]
+
+    def __deepcopy__(self, memo):
+        d = deepcopy(self.data)
+        return Node(0, 0, **d)
+
     def __eq__(self, other):
         return self.data["ID"] == other.get_data()["ID"]
 
@@ -42,3 +60,6 @@ class Node:
         output = output[:-2]
         output += " }"
         return output
+
+    def __repr__(self):
+        return self.__str__()
