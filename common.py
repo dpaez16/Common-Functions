@@ -1,5 +1,7 @@
-import heapq    # min-heap by default, negate values for max-heap
+from minheap import Minheap
+from maxheap import Maxheap
 from functools import reduce
+import operator
 
 INFINITY = float("inf")
 
@@ -77,21 +79,21 @@ def k_largest_elements(v, k):
     
     assert 1 <= k and k <= len(v)
     
-    min_heap = []
+    min_heap = Minheap()
     for idx in range(k):
-        heapq.heappush(min_heap, v[idx])
+        min_heap.push(v[idx])
     
     for idx in range(k, len(v)):
-        root = min_heap[0]
+        root = min_heap.root()
         if v[idx] > root:
-            heapq.heappop(min_heap)
-            heapq.heappush(min_heap, v[idx])
+            min_heap.pop()
+            min_heap.push(v[idx])
 
     k_largest_items = []
     while len(min_heap) != 0:
-        root = min_heap[0]
+        root = min_heap.root()
         k_largest_items.append(root)
-        heapq.heappop(min_heap)
+        min_heap.pop()
 
     k_largest_items = k_largest_items[::-1]
     return k_largest_items
@@ -111,17 +113,17 @@ def kth_largest_element(v, k):
     
     assert 1 <= k and k <= len(v)
     
-    min_heap = []
+    min_heap = Minheap()
     for idx in range(k):
-        heapq.heappush(min_heap, v[idx])
+        min_heap.push(v[idx])
     
     for idx in range(k, len(v)):
-        root = min_heap[0]
+        root = min_heap.root()
         if v[idx] > root:
-            heapq.heappop(min_heap)
-            heapq.heappush(min_heap, v[idx])
+            min_heap.pop()
+            min_heap.push(v[idx])
 
-    root = min_heap[0]
+    root = min_heap.root()
     return root
 
 
@@ -140,21 +142,21 @@ def k_smallest_elements(v, k):
     
     assert 1 <= k and k <= len(v)
     
-    max_heap = []
+    max_heap = Maxheap()
     for idx in range(k):
-        heapq.heappush(max_heap, -v[idx])
+        max_heap.push(v[idx])
     
     for idx in range(k, len(v)):
-        root = -max_heap[0]
+        root = max_heap.root()
         if v[idx] < root:
-            heapq.heappop(max_heap)
-            heapq.heappush(max_heap, -v[idx])
+            max_heap.pop()
+            max_heap.push(v[idx])
 
     k_smallest_items = []
     while len(max_heap) != 0:
-        root = -max_heap[0]
+        root = max_heap.root()
         k_smallest_items.append(root)
-        heapq.heappop(max_heap)
+        max_heap.pop()
 
     k_smallest_items = k_smallest_items[::-1]
     return k_smallest_items
@@ -169,21 +171,23 @@ def kth_smallest_element(v, k):
     
     :param v: List of elements.
     :param k: Index of the smallest element to extract.
-    :return:  k-th smallest element of the list.
+    :return:  k-th smallesccccccjeirvdnjliitblinunnvtddrnlifrtrlbjujtu
+    t element of the list.
     """
     
     assert 1 <= k and k <= len(v)
     
-    max_heap = []
+    max_heap = Maxheap()
     for idx in range(k):
-        heapq.heappush(max_heap, -v[idx])
+        max_heap.push(v[idx])
     
     for idx in range(k, len(v)):
-        if v[idx] < -max_heap[0]:
-            heapq.heappop(max_heap)
-            heapq.heappush(max_heap, -v[idx])
+        root = max_heap.root()
+        if v[idx] < root:
+            max_heap.pop()
+            max_heap.push(v[idx])
     
-    root = -max_heap[0]
+    root = max_heap.root()
     return root
 
 
@@ -199,8 +203,8 @@ def find_missing_element(A, n):
     :param n: The upper bound for the range of numbers.
     """
     
-    x1 = reduce(lambda x, y: x ^ y, A, 0)
-    x2 = reduce(lambda x, y: x ^ y, range(n + 1), 0)
+    x1 = foldr(operator.__xor__, 0, A)
+    x2 = foldr(operator.__xor__, 0, range(n + 1))
 
     msg = x1 ^ x2
 
@@ -221,10 +225,8 @@ def two_sum(A, s):
 
     for x in A:
         diff = s - x
-
         if diff in y:
             sums.append((x, diff))
-
         y[x] = diff
 
     return sums
@@ -238,24 +240,24 @@ def merge_k_sorted_arrays(A):
     """
 
     k = len(A)
-    min_heap, merged = [], []
+    min_heap, merged = Minheap(), []
 
     for idx in range(k):
         if len(A[idx]) != 0:
-            heapq.heappush(min_heap, (A[idx][0], idx, 0))
+            min_heap.push((A[idx][0], idx, 0))
 
     if len(min_heap) == 0:
         return merged
 
-    while min_heap[0][0] != 1e99:
-        min_elem, row_idx, col_idx = heapq.heappop(min_heap)
+    while min_heap.root()[0] != INFINITY:
+        min_elem, row_idx, col_idx = min_heap.pop()
         merged.append(min_elem)
         
-        val = 1e99
+        val = INFINITY
         if col_idx != (len(A[row_idx]) - 1):
             val = A[row_idx][col_idx + 1]
 
-        heapq.heappush(min_heap, (val, row_idx, col_idx + 1))
+        min_heap.push((val, row_idx, col_idx + 1))
 
     return merged
 
