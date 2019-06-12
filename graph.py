@@ -408,6 +408,61 @@ class Graph:
 
         return dist, prev
 
+    def floyd_warshall(self):
+        """
+        Computes the shortest path for all possible pairs of vertices.
+        Assumption(s):
+            Graph is weighted and directed.
+
+        :return: Dictionary that maps each pair of vertices to (shortest distance, path of vertices to take).
+        """
+        
+        assert self.directed and self.weighted
+
+        dist, next_vertex = {}, {}
+        V = self.get_vertices()
+        for i in range(len(V)):
+            for j in range(i+1, len(V)):
+                dist[(V[i], V[j])] = INFINITY
+                dist[(V[j], V[i])] = INFINITY
+                next_vertex[(V[i], V[j])] = None
+                next_vertex[(V[j], V[i])] = None
+
+        for u in V:
+            neighbors = self.get_neighbors(u)
+            for v in neighbors:
+                dist[(u, v)] = self.get_edge_value(u, v)
+                next_vertex[(u, v)] = v
+
+        for v in V:
+            dist[(v, v)] = 0
+            next_vertex[(v, v)] = v
+
+        for k in range(len(V)):
+            for i in range(len(V)):
+                for j in range(len(V)):
+                    if dist[(V[i], V[j])] > dist[(V[i], V[k])] + dist[(V[k], V[j])]:
+                        dist[(V[i], V[j])] = dist[(V[i], V[k])] + dist[(V[k], V[j])]
+                        next_vertex[(V[i], V[j])] = next_vertex[(V[i], V[k])]
+
+        def path(u, v):
+            if next_vertex[(u, v)] is None:
+                return []
+            path = [u]
+            while u != v:
+                u = next_vertex[(u, v)]
+                path.append(u)
+            return path
+
+        apsp = {}
+        for i in range(len(V)):
+            for j in range(i+1, len(V)):
+                u, v = V[i], V[j]
+                apsp[(u, v)] = (dist[(u, v)], path(u, v))
+                apsp[(v, u)] = (dist[(v, u)], path(v, u))
+
+        return apsp
+
     def mst(self):
         """
         Computes the minimum spanning tree of the graph using
@@ -428,12 +483,13 @@ class Graph:
                 neighbors = self.get_neighbors(visited_node)
                 neighbors = list(filter(lambda x: x in V, neighbors))
                 for neighbor in neighbors:
-                    possible_edges.append((visited_node, neighbor))
+                    edge_value = self.get_edge_value(visited_node, neighbor)
+                    possible_edges.append((visited_node, neighbor, edge_value))
 
             if len(possible_edges) == 0:
                 continue
             
-            min_edge = min(possible_edges, key=lambda x: self.get_edge_value(x[0], x[1]))
+            min_edge = min(possible_edges, key=lambda x: x[2])
             mst.append(min_edge)
             V = V.difference(set([min_edge[1]]))
             visited.add(min_edge[1])
