@@ -64,6 +64,19 @@ def foldr(f, z, xx):
     return reduce(lambda x, y: f(y, x), xx, z)
 
 
+def chunks(xx, n):
+    """
+    Splits up the container into chunks of size n.
+    The last chunk may have < n elements (i.e. n < len(xx) and len(xx) % n != 0)
+    or it may just consist of the containter itself (i.e. n >= len(xx)),
+
+    :param n: The size of each chunk.
+    :return:  A list containing the split chunks.
+    """
+
+    return [xx[i:i + n] for i in range(0, len(xx), n)]
+
+
 def k_largest_elements(v, k):
     """
     Extracts the k largest elements of a list.
