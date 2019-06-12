@@ -18,7 +18,7 @@ class Maxheap():
         :param x: The item to be pushed in the max heap.
         """
 
-        heapq.heappush(self._maxheap, -x)
+        heapq.heappush(self._maxheap, _MaxheapObject(x))
 
     def pop(self):
         """
@@ -32,7 +32,7 @@ class Maxheap():
         """
         
         assert not self.empty()
-        return -heapq.heappop(self._maxheap)
+        return heapq.heappop(self._maxheap).val
     
     def root(self):
         """
@@ -46,7 +46,7 @@ class Maxheap():
         """
         
         assert not self.empty()
-        return -self._maxheap[0]
+        return self._maxheap[0].val
     
     def empty(self):
         """
@@ -61,7 +61,24 @@ class Maxheap():
         return len(self._maxheap)
     
     def __str__(self):
-        return "{}".format([-x for x in self._maxheap])
+        return "{}".format([x for x in self._maxheap])
 
     def __repr__(self):
         return "Maxheap: {}".format(self.__str__())
+    
+class _MaxheapObject(object):
+    def __init__(self, x):
+        self.val = x
+
+    def __lt__(self, other):
+        return self.val > other.val
+        
+    def __eq__(self, other):
+        return self.val == other.val
+
+    def __str__(self):
+        return str(self.val)
+
+    def __repr__(self):
+        return repr(self.val)
+
