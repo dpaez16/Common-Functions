@@ -417,7 +417,7 @@ class Graph:
         :return: Dictionary that maps each pair of vertices to (shortest distance, path of vertices to take).
         """
         
-        assert self.directed and self.weighted
+        assert self._directed and self._weighted
 
         dist, next_vertex = {}, {}
         V = self.get_vertices()
