@@ -1,5 +1,6 @@
 from minheap import Minheap
 from maxheap import Maxheap
+from math import sqrt, floor
 from functools import reduce
 import operator
 
@@ -79,6 +80,34 @@ def chunks(xx, n):
     assert n > 0
 
     return [xx[i:i + n] for i in range(0, len(xx), n)]
+
+
+def is_prime(x):
+    """
+    Checks to see if a number is prime.
+    Uses a known fact that all primes are of the form 6k ± 1 (for some integer k).
+    Assumption(s):
+        x >= 0
+    
+    :param x: The number to be checked.
+    :return:  Boolean value indicating whether the number is prime,
+    """
+
+    if x < 2:
+        return False
+    if x == 2 or x == 3:
+        return True
+    if x % 2 == 0 or x % 3 == 0:
+        return False
+
+    i, w = 5, 2
+    while i**2 <= x:
+        if x % i == 0:
+            return False
+        i += w
+        w = 6 - w
+
+    return True
 
 
 def k_largest_elements(v, k):
