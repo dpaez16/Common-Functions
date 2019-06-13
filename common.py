@@ -68,11 +68,15 @@ def chunks(xx, n):
     """
     Splits up the container into chunks of size n.
     The last chunk may have < n elements (i.e. n < len(xx) and len(xx) % n != 0)
-    or it may just consist of the containter itself (i.e. n >= len(xx)),
+    or it may just consist of the containter itself (i.e. n >= len(xx)).
+    Assumption(s):
+        xx is a container.
+        n > 0
 
     :param n: The size of each chunk.
     :return:  A list containing the split chunks.
     """
+    assert n > 0
 
     return [xx[i:i + n] for i in range(0, len(xx), n)]
 
