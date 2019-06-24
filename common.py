@@ -67,7 +67,7 @@ def foldr(f, z, xx):
 
 def chunks(xx, n):
     """
-    Splits up the container into chunks of size n.
+    Generator that splits up the container into chunks of size n.
     The last chunk may have < n elements (i.e. n < len(xx) and len(xx) % n != 0)
     or it may just consist of the containter itself (i.e. n >= len(xx)).
     Assumption(s):
@@ -79,7 +79,12 @@ def chunks(xx, n):
     """
     assert n > 0
 
-    return [xx[i:i + n] for i in range(0, len(xx), n)]
+    i, j = 0, n
+    while i < len(xx):
+        end = min(j, len(xx))
+        yield xx[i:end]
+        i += n
+        j += n
 
 
 def is_prime(x):
@@ -108,6 +113,38 @@ def is_prime(x):
         w = 6 - w
 
     return True
+
+
+def prime_factorization(n):
+    """
+    Computes the prime factorization of a number.
+    Assumption(s):
+        n >= 0
+
+    :param n: The number to be factorized.
+    :return:  A list containing the prime factors.
+    """
+    
+    assert n >= 0
+    
+    factors = []
+    if n <= 1:
+        return factors
+    
+    while n % 2 == 0:
+        factors.append(2)
+        n = n // 2
+
+    end = floor(sqrt(n))
+    for factor in range(3, end+1, 2):
+        while n % factor == 0:
+            factors.append(factor)
+            n = n // factor
+    
+    if n > 2:
+        factors.append(n)
+
+    return factors
 
 
 def k_largest_elements(v, k):
@@ -159,19 +196,7 @@ def kth_largest_element(v, k):
     
     assert 1 <= k and k <= len(v)
     
-    min_heap = Minheap()
-    for idx in range(k):
-        min_heap.push(v[idx])
-    
-    for idx in range(k, len(v)):
-        root = min_heap.root()
-        if v[idx] > root:
-            min_heap.pop()
-            min_heap.push(v[idx])
-
-    root = min_heap.root()
-    return root
-
+    return kth_smallest_element(v, len(v) - k + 1)
 
 def k_smallest_elements(v, k):
     """
@@ -217,8 +242,7 @@ def kth_smallest_element(v, k):
     
     :param v: List of elements.
     :param k: Index of the smallest element to extract.
-    :return:  k-th smallesccccccjeirvdnjliitblinunnvtddrnlifrtrlbjujtu
-    t element of the list.
+    :return:  k-th smallest element of the list.
     """
     
     assert 1 <= k and k <= len(v)
@@ -235,6 +259,52 @@ def kth_smallest_element(v, k):
     
     root = max_heap.root()
     return root
+
+
+def kth_smallest_element(v, k):
+    """
+    Extracts the k-th smallest element of a list.
+    
+    Assumption(s):
+        1 <= k <= len(v)
+    
+    :param v: List of elements.
+    :param k: Index of the smallest element to extract.
+    :return:  k-th smallest element of the list.
+    """
+    assert 1 <= k and k <= len(v)
+
+    median = lambda xx: sorted(xx)[len(xx)//2]
+    def partition(v, l, r, x):
+        i = l
+        while i < r:
+            if v[i] == x:
+                break
+            i += 1
+        v[i], v[r] = v[r], v[i]
+
+        i = l
+        for j in range(l, r):
+            if v[j] <= x:
+                v[i], v[j] = v[j], v[i]
+                i += 1
+    
+        v[i], v[r] = v[r], v[i]
+        return i
+
+    l, r = 0, len(v) - 1
+    while k > 0 and k <= r - l + 1:
+        groups = chunks(v[l:r+1], 5)
+        medians = [median(group) for group in groups]
+        mom = median(medians)
+
+        pos = partition(v, l, r, mom)
+        if pos - l == k - 1:
+            return v[pos]
+        elif pos - l > k - 1:
+            r = pos - 1
+        else:
+            l, k = pos + 1, k - pos + l - 1
 
 
 def find_missing_element(A, n):
