@@ -8,6 +8,22 @@ class Maxheap():
         max_heap: The max heap itself.
     """
 
+    class _MaxheapObject(object):
+        def __init__(self, x):
+            self.val = x
+
+        def __lt__(self, other):
+            return self.val > other.val
+            
+        def __eq__(self, other):
+            return self.val == other.val
+
+        def __str__(self):
+            return str(self.val)
+
+        def __repr__(self):
+            return repr(self.val)
+
     def __init__(self):
         self._maxheap = []
 
@@ -18,7 +34,7 @@ class Maxheap():
         :param x: The item to be pushed in the max heap.
         """
 
-        heapq.heappush(self._maxheap, _MaxheapObject(x))
+        heapq.heappush(self._maxheap, Maxheap._MaxheapObject(x))
 
     def pop(self):
         """
@@ -65,20 +81,3 @@ class Maxheap():
 
     def __repr__(self):
         return "Maxheap: {}".format(self.__str__())
-    
-class _MaxheapObject(object):
-    def __init__(self, x):
-        self.val = x
-
-    def __lt__(self, other):
-        return self.val > other.val
-        
-    def __eq__(self, other):
-        return self.val == other.val
-
-    def __str__(self):
-        return str(self.val)
-
-    def __repr__(self):
-        return repr(self.val)
-
