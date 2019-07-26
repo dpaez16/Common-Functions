@@ -217,8 +217,7 @@ def kth_smallest_element(v, k):
     
     :param v: List of elements.
     :param k: Index of the smallest element to extract.
-    :return:  k-th smallesccccccjeirvdnjliitblinunnvtddrnlifrtrlbjujtu
-    t element of the list.
+    :return:  k-th smallest element of the list.
     """
     
     assert 1 <= k and k <= len(v)
