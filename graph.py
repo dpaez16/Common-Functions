@@ -51,7 +51,7 @@ class Graph:
                 visited.add(curr)
                 neighbors = self.get_neighbors(curr)
                 for neighbor in neighbors:
-                    queue.enqueue(neighbor)
+                    queue.push(neighbor)
                     edge_value = None if not self._weighted else self._edge_values[(curr, neighbor)]
                     new_G.add_edge(curr, neighbor, edge_value)
 
