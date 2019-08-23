@@ -371,8 +371,12 @@ class Graph:
     def dijkstra(self, source):
         """
         Computes Dijkstra's algorithm (shortest path from 
-        a source vertex to all other verticies). Assumes
-        "source" is in the graph.
+        a source vertex to all other verticies). 
+        
+        Assumption(s):
+            - "source" is in the graph.
+            - The graph has no negative edge-weights.
+            - The graph has no negative cycles.
 
         :param source: The vertex to perform Dijkstra's on.
         :return Two dictionaries:
@@ -405,6 +409,45 @@ class Graph:
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
                     prev[neighbor] = u
+
+        return dist, prev
+
+        def bellman_ford(self, source):
+        """
+        Computes the Bellman-Ford algorithm (shortest path from 
+        a source vertex to all other verticies).
+
+        Assumption(s):
+            - "source" is in the graph.
+            - The graph has no negative edge-weights.
+            - The graph has no negative cycles.
+
+        :param source: The vertex to perform the Bellman-Ford algorithm on.
+        :return Two dictionaries:
+            -A dictionary containing the cost to traverse from "source" to each
+            reachable vertex in the graph.
+            -A dictionary encoding the shortest path from "source" to each
+            reachable vertex in the graph.
+        """
+
+        V, E = self.get_vertices(), self.get_edges()
+        dist, prev = {}, {}
+
+        assert source in V
+
+        for v in V:
+            dist[v] = INFINITY
+            prev[v] = None
+        dist[source] = 0
+
+        for i in range(len(V) - 1):
+            for v in E:
+                neighbors = self.get_neighbors(v)
+                for neighbor in neighbors:
+                    alt = dist[v] + self.get_edge_value(v, neighbor)
+                    if alt < dist[neighbor]:
+                        dist[neighbor] = alt
+                        prev[neighbor] = v
 
         return dist, prev
 
