@@ -244,34 +244,6 @@ def kth_smallest_element(v, k):
     :param k: Index of the smallest element to extract.
     :return:  k-th smallest element of the list.
     """
-    
-    assert 1 <= k and k <= len(v)
-    
-    max_heap = Maxheap()
-    for idx in range(k):
-        max_heap.push(v[idx])
-    
-    for idx in range(k, len(v)):
-        root = max_heap.root()
-        if v[idx] < root:
-            max_heap.pop()
-            max_heap.push(v[idx])
-    
-    root = max_heap.root()
-    return root
-
-
-def kth_smallest_element(v, k):
-    """
-    Extracts the k-th smallest element of a list.
-    
-    Assumption(s):
-        1 <= k <= len(v)
-    
-    :param v: List of elements.
-    :param k: Index of the smallest element to extract.
-    :return:  k-th smallest element of the list.
-    """
     assert 1 <= k and k <= len(v)
 
     median = lambda xx: sorted(xx)[len(xx)//2]
@@ -299,12 +271,13 @@ def kth_smallest_element(v, k):
         mom = median(medians)
 
         pos = partition(v, l, r, mom)
-        if pos - l == k - 1:
+        numElements = pos - l + 1
+        if numElements == k:
             return v[pos]
-        elif pos - l > k - 1:
+        elif numElements > k:
             r = pos - 1
         else:
-            l, k = pos + 1, k - pos + l - 1
+            l, k = pos + 1, k - numElements
 
 
 def find_missing_element(A, n):
