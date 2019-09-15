@@ -555,8 +555,9 @@ class Graph:
         L = []
         
         V = set(new_G.get_vertices())
-        S = set([])
+        S = set([]) # source vertices
         for v in V:
+            # add all source vertices
             incoming_neighbors = new_G.get_incoming_vertices(v)
             if len(incoming_neighbors) == 0:
                 S.add(v)
@@ -565,6 +566,8 @@ class Graph:
             n = S.pop()
             L.append(n)
 
+            # takes each source vertex and tries to remove an edge from each neighbor.
+            # if that edge removal results in a source vertex being made, add the new source vertex.
             neighbors = new_G.get_neighbors(n)
             for neighbor in neighbors:
                 new_G.remove_edge(n, neighbor)
@@ -572,6 +575,7 @@ class Graph:
                 if len(incoming_vertices) == 0:
                     S.add(neighbor)
     
+        # if there are still edges remaining, then the graph has a cycle ==> no topological sort.
         edges = new_G.get_edges()
         for v, neighbors in edges.items():
             if len(neighbors) != 0:
