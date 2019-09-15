@@ -6,17 +6,19 @@ class Maxheap():
 
     Attributes:
         max_heap: The max heap itself.
+        key: Pre-processing function that will be used on each object whenever pushing/popping.
     """
     
     class _MaxheapObject(object):
-        def __init__(self, x):
+        def __init__(self, x, key=lambda x: x):
             self.val = x
+            self._key = key
 
         def __lt__(self, other):
-            return self.val > other.val
+            return self._key(self.val) > self._key(other.val)
         
         def __eq__(self, other):
-            return self.val == other.val
+            return self._key(self.val) == self._key(other.val)
 
         def __str__(self):
             return str(self.val)
@@ -24,24 +26,9 @@ class Maxheap():
         def __repr__(self):
             return repr(self.val)
 
-    class _MaxheapObject(object):
-        def __init__(self, x):
-            self.val = x
-
-        def __lt__(self, other):
-            return self.val > other.val
-            
-        def __eq__(self, other):
-            return self.val == other.val
-
-        def __str__(self):
-            return str(self.val)
-
-        def __repr__(self):
-            return repr(self.val)
-
-    def __init__(self):
+    def __init__(self, key=lambda x: x):
         self._maxheap = []
+        self._key = key
 
     def push(self, x):
         """
@@ -50,7 +37,7 @@ class Maxheap():
         :param x: The item to be pushed in the max heap.
         """
 
-        heapq.heappush(self._maxheap, Maxheap._MaxheapObject(x))
+        heapq.heappush(self._maxheap, Maxheap._MaxheapObject(x, self._key))
 
     def pop(self):
         """
