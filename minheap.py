@@ -67,7 +67,7 @@ class Minheap():
         """
         
         assert not self.empty()
-        return self._minheap[0]
+        return self._minheap[0].val
     
     def empty(self):
         """
