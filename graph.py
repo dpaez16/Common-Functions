@@ -3,6 +3,7 @@ from common import INFINITY
 from copy import deepcopy
 from queue import Queue
 from stack import Stack
+from minheap import Minheap
 import random
 
 
@@ -386,24 +387,22 @@ class Graph:
             reachable vertex in the graph.
         """
 
-        Q, V = set([source]), self.get_vertices()
+        V = self.get_vertices()
         dist, prev = {}, {}
+        minHeap = Minheap(key=lambda x: dist[x])
 
         assert source in V
 
         for v in V:
             dist[v] = INFINITY
             prev[v] = None
-            Q.add(v)
+            minHeap.push(v)
         dist[source] = 0
 
-        while len(Q) != 0:
-            u = min(Q, key=lambda q: dist[q])
-
-            Q = Q.difference(set([u]))
-
+        while len(minHeap) != 0:
+            u = minHeap.pop()
+            
             neighbors = self.get_neighbors(u)
-            neighbors = list(filter(lambda x: x in Q, neighbors))
             for neighbor in neighbors:
                 alt = dist[u] + self.get_edge_value(u, neighbor)
                 if alt < dist[neighbor]:

@@ -53,7 +53,7 @@ class Minheap():
         """
         
         assert not self.empty()
-        return heapq.heappop(self._minheap)
+        return heapq.heappop(self._minheap).val
     
     def root(self):
         """
