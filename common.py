@@ -332,6 +332,7 @@ def merge_k_sorted_arrays(A):
     min_heap, merged = Minheap(), []
 
     for idx in range(k):
+        # sorted array might be empty
         if len(A[idx]) != 0:
             min_heap.push((A[idx][0], idx, 0))
 
