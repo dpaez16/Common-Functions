@@ -515,27 +515,26 @@ class Graph:
 
         V = self.get_vertices()
         random.shuffle(V)
-        visited = set([V[0]])
-        V = set(V).difference(set([V[0]]))
+        mstVertices = set([V[0]])
         mst = []
+        
+        while len(mstVertices) != len(V):
+            candidates = []
+            for vertex in mstVertices:
+                neighbors = self.get_neighbors(vertex)
+                neighbors = filter(lambda neighbor: neighbor not in mstVertices, neighbors)
 
-        while len(V) != 0:
-            possible_edges = []
-            for visited_node in visited:
-                neighbors = self.get_neighbors(visited_node)
-                neighbors = list(filter(lambda x: x in V, neighbors))
-                for neighbor in neighbors:
-                    edge_value = self.get_edge_value(visited_node, neighbor)
-                    possible_edges.append((visited_node, neighbor, edge_value))
-
-            if len(possible_edges) == 0:
-                continue
+                edges = map(lambda neighbor: (vertex, neighbor), neighbors)
+                candidates += list(edges)
             
-            min_edge = min(possible_edges, key=lambda x: x[2])
-            mst.append(min_edge)
-            V = V.difference(set([min_edge[1]]))
-            visited.add(min_edge[1])
+            if len(candidates) == 0:
+                continue
+            optimalEdge = min(candidates, key=lambda edge: self.get_edge_value(edge[0], edge[1]))
+            minEdgeValue = self.get_edge_value(optimalEdge[0], optimalEdge[1])
 
+            mst.append((optimalEdge[0], optimalEdge[1], minEdgeValue))
+            mstVertices.add(optimalEdge[1])
+        
         return mst
 
     def topological_sort(self):
