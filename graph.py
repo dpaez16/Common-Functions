@@ -195,6 +195,19 @@ class Graph:
 
         return list(incoming_vertices)
 
+    def is_source_vertex(self, vertex):
+        """
+        Returns true if vertex is a source vertex.
+        A source vertex is a vertex that has no incoming edges.
+
+        :param vertex: Node to be checked.
+        :return: True if vertex is a source vertex.
+        """
+        assert self.has_vertex(vertex)
+
+        incoming_neighbors = new_G.get_incoming_vertices(vertex)
+        return len(incoming_neighbors) == 0
+
     def has_vertex(self, vertex):
         """
         Checks to see if a vertex is in the graph.
@@ -550,28 +563,26 @@ class Graph:
         assert self._directed
         new_G = self.duplicate()
 
-        L = []
+        TPS = []
         
         V = set(new_G.get_vertices())
-        S = set([]) # source vertices
+        sourceVertices = set([])
         for v in V:
             # add all source vertices
-            incoming_neighbors = new_G.get_incoming_vertices(v)
-            if len(incoming_neighbors) == 0:
-                S.add(v)
+            if self.is_source_vertex(v):
+                sourceVertices.add(v)
 
-        while len(S) != 0:
-            n = S.pop()
-            L.append(n)
+        while len(sourceVertices) != 0:
+            sourceVertex = sourceVertices.pop()
+            TPS.append(sourceVertex)
 
             # takes each source vertex and tries to remove an edge from each neighbor.
             # if that edge removal results in a source vertex being made, add the new source vertex.
-            neighbors = new_G.get_neighbors(n)
+            neighbors = new_G.get_neighbors(sourceVertex)
             for neighbor in neighbors:
-                new_G.remove_edge(n, neighbor)
-                incoming_vertices = new_G.get_incoming_vertices(neighbor)
-                if len(incoming_vertices) == 0:
-                    S.add(neighbor)
+                new_G.remove_edge(sourceVertex, neighbor)
+                if self.is_source_vertex(neighbor):
+                    sourceVertices.add(neighbor)
     
         # if there are still edges remaining, then the graph has a cycle ==> no topological sort.
         edges = new_G.get_edges()
@@ -579,7 +590,7 @@ class Graph:
             if len(neighbors) != 0:
                 return None
         
-        return L
+        return TPS
 
     def strongly_connected_components(self):
         """
