@@ -17,6 +17,9 @@ class Maxheap():
         def __lt__(self, other):
             return self._key(self.val) > self._key(other.val)
         
+        def __gt__(self, other):
+            return self._key(self.val) < self._key(other.val)
+        
         def __eq__(self, other):
             return self._key(self.val) == self._key(other.val)
 
