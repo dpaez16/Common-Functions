@@ -9,37 +9,42 @@ class Minheap():
     """
     
     class _MinheapObject(object):
-        def __init__(self, x, key=lambda x: x):
+        def __init__(self, x, key):
             self.val = x
-            self._key = key
+            self.key = key
 
         def __lt__(self, other):
-            return self._key(self.val) < self._key(other.val)
+            return self.key < other.key
 
         def __gt__(self, other):
-            return self._key(self.val) > self._key(other.val)
+            return self.key > other.key
         
         def __eq__(self, other):
-            return self._key(self.val) == self._key(other.val)
+            return self.key == other.key
 
         def __str__(self):
-            return str(self.val)
+            return "({}, {})".format(self.val, self.key)
 
         def __repr__(self):
-            return repr(self.val)
+            return self.__str__()
     
-    def __init__(self, key=lambda x: x):
+    def __init__(self):
         self._minheap = []
-        self._key = key
+        self._minheap_set = set()
 
-    def push(self, x):
+    def push(self, x, key):
         """
         Pushes an item into the min heap.
 
         :param x: The item to be pushed in the min heap.
         """
-        
-        heapq.heappush(self._minheap, Minheap._MinheapObject(x, self._key))
+
+        if x in self._minheap_set:
+            return
+
+        heap_elem = Minheap._MinheapObject(x, key)
+        heapq.heappush(self._minheap, heap_elem)
+        self._minheap_set.add(x)
 
     def pop(self):
         """
@@ -53,7 +58,21 @@ class Minheap():
         """
         
         assert not self.empty()
-        return heapq.heappop(self._minheap).val
+        top_elem = heapq.heappop(self._minheap).val
+        self._minheap_set.remove(top_elem)
+        return top_elem
+
+    def update_key(self, x, new_key):
+        assert x in self._minheap_set
+
+        for elem in self._minheap:
+            if elem.val != x:
+                continue
+    
+            elem.key = new_key
+            heapq.heapify(self._minheap)
+
+            break
     
     def root(self):
         """
@@ -86,3 +105,6 @@ class Minheap():
 
     def __repr__(self):
         return "Minheap: {}".format(self.__str__())
+
+    def __in__(self, elem):
+        return elem in self._minheap_set
