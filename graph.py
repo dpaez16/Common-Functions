@@ -402,14 +402,17 @@ class Graph:
 
         V = self.get_vertices()
         dist, prev = {}, {}
-        minHeap = Minheap(key=lambda x: dist[x])
+        minHeap = Minheap()
+        dist[source] = 0
 
         assert source in V
 
         for v in V:
-            dist[v] = INFINITY
-            prev[v] = None
-            minHeap.push(v)
+            if v != source:
+                dist[v] = INFINITY
+                prev[v] = None
+            minHeap.push(v, dist[v])
+
         dist[source] = 0
 
         while len(minHeap) != 0:
@@ -421,6 +424,7 @@ class Graph:
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
                     prev[neighbor] = u
+                    minHeap.update_key(neighbor, alt)
 
         return dist, prev
 
