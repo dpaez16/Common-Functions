@@ -10,37 +10,43 @@ class Maxheap():
     """
     
     class _MaxheapObject(object):
-        def __init__(self, x, key=lambda x: x):
+        def __init__(self, x, key):
             self.val = x
-            self._key = key
+            self.key = key
 
         def __lt__(self, other):
-            return self._key(self.val) > self._key(other.val)
+            return self.key > other.key
         
         def __gt__(self, other):
-            return self._key(self.val) < self._key(other.val)
+            return self.key < other.key
         
         def __eq__(self, other):
-            return self._key(self.val) == self._key(other.val)
+            return self.key == other.key
 
         def __str__(self):
-            return str(self.val)
+            return "({}, {})".format(self.val, self.key)
 
         def __repr__(self):
-            return repr(self.val)
+            return self.__str__()
 
-    def __init__(self, key=lambda x: x):
+    def __init__(self):
         self._maxheap = []
-        self._key = key
+        self._maxheap_set = set()
 
-    def push(self, x):
+    def push(self, x, key):
         """
         Pushes an item into the max heap.
 
         :param x: The item to be pushed in the max heap.
+        :param key: The key associated with the item.
         """
 
-        heapq.heappush(self._maxheap, Maxheap._MaxheapObject(x, self._key))
+        if x in self._maxheap_set:
+            return
+
+        heap_elem = Maxheap._MaxheapObject(x, key)
+        heapq.heappush(self._maxheap, heap_elem)
+        self._maxheap_set.add(x)
 
     def pop(self):
         """
@@ -54,7 +60,31 @@ class Maxheap():
         """
         
         assert not self.empty()
-        return heapq.heappop(self._maxheap).val
+        top_elem = heapq.heappop(self._maxheap).val
+        self._maxheap_set.remove(top_elem)
+        return top_elem
+
+    def update_key(self, x, new_key):
+        """
+        Changes the key of an item to a new key.
+
+        Assumption(s):
+            The max heap has the item.
+
+        :param x: The item to change its key.
+        :param new_key: The new key to update for the item.
+        """
+
+        assert x in self._maxheap_set
+
+        for elem in self._maxheap:
+            if elem.val != x:
+                continue
+    
+            elem.key = new_key
+            heapq.heapify(self._maxheap)
+
+            break
     
     def root(self):
         """

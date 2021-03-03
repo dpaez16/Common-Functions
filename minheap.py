@@ -3,6 +3,7 @@ import heapq
 class Minheap():
     """
     A wrapped interface for a heapq (used as a min heap).
+
     Attributes:
         min_heap: The min heap itself.
         key: Pre-processing function that will be used on each object whenever pushing/popping.
@@ -37,6 +38,7 @@ class Minheap():
         Pushes an item into the min heap.
 
         :param x: The item to be pushed in the min heap.
+        :param key: The key associated with the item.
         """
 
         if x in self._minheap_set:
@@ -63,6 +65,16 @@ class Minheap():
         return top_elem
 
     def update_key(self, x, new_key):
+                """
+        Changes the key of an item to a new key.
+
+        Assumption(s):
+            The max heap has the item.
+
+        :param x: The item to change its key.
+        :param new_key: The new key to update for the item.
+        """
+
         assert x in self._minheap_set
 
         for elem in self._minheap:
