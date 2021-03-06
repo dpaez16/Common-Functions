@@ -118,5 +118,5 @@ class Minheap():
     def __repr__(self):
         return "Minheap: {}".format(self.__str__())
 
-    def __in__(self, elem):
+    def __contains__(self, elem):
         return elem in self._minheap_set

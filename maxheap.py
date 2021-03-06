@@ -117,3 +117,6 @@ class Maxheap():
 
     def __repr__(self):
         return "Maxheap: {}".format(self.__str__())
+
+    def __contains__(self, elem):
+        return elem in self._maxheap_set
