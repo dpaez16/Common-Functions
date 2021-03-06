@@ -402,18 +402,16 @@ class Graph:
 
         V = self.get_vertices()
         dist, prev = {}, {}
-        minHeap = Minheap()
-        dist[source] = 0
 
         assert source in V
 
         for v in V:
-            if v != source:
-                dist[v] = INFINITY
-                prev[v] = None
-            minHeap.push(v, dist[v])
+            dist[v] = INFINITY
+            prev[v] = None
 
         dist[source] = 0
+        pairs = [(v, dist[v]) for v in V]
+        minHeap = Minheap(pairs)
 
         while len(minHeap) != 0:
             u = minHeap.pop()
