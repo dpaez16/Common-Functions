@@ -3,10 +3,6 @@ import heapq
 class Minheap():
     """
     A wrapped interface for a heapq (used as a min heap).
-
-    Attributes:
-        min_heap: The min heap itself.
-        key: Pre-processing function that will be used on each object whenever pushing/popping.
     """
     
     class _MinheapObject(object):
@@ -29,9 +25,12 @@ class Minheap():
         def __repr__(self):
             return self.__str__()
     
-    def __init__(self):
+    def __init__(self, pairs=[]):
         self._minheap = []
         self._minheap_set = set()
+
+        for elem, key in pairs:
+            self.push(elem, key)
 
     def push(self, x, key):
         """

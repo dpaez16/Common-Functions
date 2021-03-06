@@ -531,27 +531,36 @@ class Graph:
         """
 
         V = self.get_vertices()
-        random.shuffle(V)
-        mstVertices = set([V[0]])
-        mst = []
-        
-        while len(mstVertices) != len(V):
-            candidates = []
-            for vertex in mstVertices:
-                neighbors = self.get_neighbors(vertex)
-                neighbors = filter(lambda neighbor: neighbor not in mstVertices, neighbors)
+        heap = Minheap()
+        cost, prev = {}, {}
+        mst = set()
 
-                edges = map(lambda neighbor: (vertex, neighbor), neighbors)
-                candidates += list(edges)
-            
-            if len(candidates) == 0:
+        for u in V:
+            cost[u] = INFINITY
+            prev[u] = None
+        
+        v = random.choice(V)
+        cost[v] = 0
+        pairs = [(u, cost[u]) for u in V]
+        heap = Minheap(pairs)
+
+        while not heap.empty():
+            u = heap.pop()
+            neighbors = self.get_neighbors(u)
+            for v in neighbors:
+                edge_weight = self.get_edge_value(u, v)
+                if v in heap and cost[v] > edge_weight:
+                    cost[v] = edge_weight
+                    prev[v] = u
+                    heap.update_key(v, cost[v])
+
+        for v in V:
+            if prev[v] is None:
                 continue
-            optimalEdge = min(candidates, key=lambda edge: self.get_edge_value(edge[0], edge[1]))
-            minEdgeValue = self.get_edge_value(optimalEdge[0], optimalEdge[1])
 
-            mst.append((optimalEdge[0], optimalEdge[1], minEdgeValue))
-            mstVertices.add(optimalEdge[1])
-        
+            edge = (prev[v], v) if prev[v] < v else (v, prev[v])
+            mst.add(edge)
+
         return mst
 
     def topological_sort(self):

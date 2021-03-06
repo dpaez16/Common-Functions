@@ -3,10 +3,6 @@ import heapq
 class Maxheap():
     """
     A wrapped interface for a heapq (used as a max heap).
-
-    Attributes:
-        max_heap: The max heap itself.
-        key: Pre-processing function that will be used on each object whenever pushing/popping.
     """
     
     class _MaxheapObject(object):
@@ -29,9 +25,12 @@ class Maxheap():
         def __repr__(self):
             return self.__str__()
 
-    def __init__(self):
+    def __init__(self, pairs=[]):
         self._maxheap = []
         self._maxheap_set = set()
+
+        for elem, key in pairs:
+            self.push(elem, key)
 
     def push(self, x, key):
         """
