@@ -15,7 +15,25 @@ class Trie:
             curr = curr.children[c]
 
     def delete(self, word):
-        return
+        if len(word) == 0:
+            return
+
+        curr = pivotNode = self.root
+        pivotIdx = 0
+
+        for i in range(len(word)):
+            c = word[i]
+
+            if c not in curr.children:
+                return
+
+            if len(curr.children) > 1:
+                pivotNode = curr
+                pivotIdx = i
+
+            curr = curr.children[c]
+
+        del pivotNode.children[word[pivotIdx]]
 
     def find(self, word):
         curr = self.root
