@@ -56,7 +56,9 @@ class FibonacciHeap:
         assert not self.empty()
 
         elem, key = self.root()
-        if self.size == 1:
+        self.size -= 1
+
+        if self.size == 0:
             self.min_node = None
             self.head = None
             return
@@ -69,8 +71,6 @@ class FibonacciHeap:
             self.head = self.head.next
 
         self._remove_node(self.min_node)
-        self.size -= 1
-
         self._update_min_node()
         self._consolidate()
 
