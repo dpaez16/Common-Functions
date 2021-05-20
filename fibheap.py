@@ -28,10 +28,16 @@ class FibonacciHeap:
         node.prev = root
 
     def _remove_node(self, node):
+        if self.head.elem == node.elem:
+            self.head = node.next
+
         front = node.next
         prev = node.prev
         prev.next = front
         front.prev = prev
+
+        node.prev = None
+        node.next = None
 
     def _update_min_node(self):
         tail = self.head.prev
@@ -50,7 +56,13 @@ class FibonacciHeap:
         return new_min_node
 
     def _merge(self, child, root):
-        return
+        self._remove_node(child)
+        if root.rank == 0:
+            root.child = child
+        else:
+            self._insert(child, child.prev, root.child)
+
+        root.rank += 1
 
     def _consolidate(self):
         if self.size == 1:
