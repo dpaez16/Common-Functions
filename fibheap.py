@@ -49,7 +49,33 @@ class FibonacciHeap:
 
         return new_min_node
 
+    def _merge(self, child, root):
+        return
+
     def _consolidate(self):
+        if self.size == 1:
+            return
+
+        rank_map = [None] * 4
+        curr = self.head
+        i = 0
+
+        while i < 4:
+            rank = curr.rank
+            if rank_map[rank] is None:
+                rank_map[rank] = curr
+                i += 1
+            elif rank_map[rank].elem == curr.elem:
+                i += 1
+            else:
+                other_node = rank_map[rank]
+                child = other_node if curr.key < other_node.key else curr
+                root = curr if curr.key < other_node.key else other_node
+                self._merge(child, root)
+                rank_map[rank] = None
+                curr = root
+                i = 0
+
         return
 
     def pop(self):
