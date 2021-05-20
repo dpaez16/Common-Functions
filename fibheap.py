@@ -16,7 +16,7 @@ class FibonacciHeap:
             self._insert(node, node.prev, self.head)
 
         if node.key < self.min_node.key:
-            self.min_node = key
+            self.min_node = node
 
         self.size += 1
 
@@ -109,7 +109,7 @@ class FibonacciHeap:
             self.head = self.head.next
 
         self._remove_node(self.min_node)
-        self._update_min_node()
+        self.min_node = self._update_min_node()
         self._consolidate()
 
         return elem, key
