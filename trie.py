@@ -14,6 +14,17 @@ class Trie:
 
             curr = curr.children[c]
 
+    def _is_singular_branch(self, root):
+        if root is None: 
+            return True
+        if len(root.children) > 1: 
+            return False
+
+        for c in root.children:
+            return self._is_singular_branch(root.children[c])
+
+        return True
+
     def delete(self, word):
         if len(word) == 0:
             return
@@ -33,7 +44,18 @@ class Trie:
 
             curr = curr.children[c]
 
-        del pivotNode.children[word[pivotIdx]]
+        if not curr.is_terminal: 
+            return
+
+        curr.is_terminal = False
+        if len(curr.children) > 0:
+            return
+
+        c = word[pivotIdx]
+        if not self._is_singular_branch(pivotNode.children[c]):
+            return
+
+        del pivotNode.children[c]
 
     def find(self, word):
         curr = self.root
