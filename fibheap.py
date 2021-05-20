@@ -75,8 +75,10 @@ class FibonacciHeap:
             rank = curr.rank
             if rank_map[rank] is None:
                 rank_map[rank] = curr
+                curr = curr.next
                 i += 1
             elif rank_map[rank].elem == curr.elem:
+                curr = curr.next
                 i += 1
             else:
                 other_node = rank_map[rank]
