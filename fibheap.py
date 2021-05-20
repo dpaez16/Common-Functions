@@ -10,16 +10,19 @@ class FibonacciHeap:
         if self.size == 0:
             self.min_node = node
         else:
-            front = self.min_node.next
-            self.min_node.next = node
-            node.next = front
-            front.prev = node
-            node.prev = self.min_node
+            self._insert(node, self.min_node)
 
         if node.key < self.min_node.key:
             self.min_node = key
 
         self.size += 1
+
+    def _insert(self, node, root):
+        front = root.next
+        root.next = node
+        node.next = front
+        front.prev = node
+        node.prev = root
 
     def pop(self):
         return
@@ -44,3 +47,4 @@ class FibonacciHeap:
             self.key = key if key is not None else elem
             self.prev = self
             self.next = self
+            self.child = None
