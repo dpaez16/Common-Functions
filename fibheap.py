@@ -24,7 +24,9 @@ class FibonacciHeap:
         return
 
     def root(self):
-        return self.min_node
+        assert not self.empty()
+        elem, key = self.min_node.elem, self.min_node.key
+        return elem, key
 
     def empty(self):
         return self.__len__() == 0
