@@ -49,6 +49,9 @@ class FibonacciHeap:
 
         return new_min_node
 
+    def _consolidate(self):
+        return
+
     def pop(self):
         assert not self.empty()
 
@@ -59,11 +62,18 @@ class FibonacciHeap:
             return
 
         child = self.min_node.child
-        self._insert(child, child.prev, self.head)
-        self.head = child
+        if child is not None:
+            self._insert(child, child.prev, self.head)
+
+        if self.head.elem == self.min_node.elem:
+            self.head = self.head.next
+
         self._remove_node(self.min_node)
         self.size -= 1
+
         self._update_min_node()
+        self._consolidate()
+
         return elem, key
 
     def decrease_key(self):
@@ -87,3 +97,4 @@ class FibonacciHeap:
             self.prev = self
             self.next = self
             self.child = None
+            self.rank = 0
