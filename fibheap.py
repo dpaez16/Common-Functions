@@ -40,7 +40,6 @@ class FibonacciHeap:
         node.next = None
 
     def _update_min_node(self):
-        tail = self.head.prev
         new_min_node = self.head
         ptr = self.head
 
@@ -48,10 +47,10 @@ class FibonacciHeap:
             if ptr.key < new_min_node.key:
                 new_min_node = ptr
 
-            if ptr.next.elem == tail.elem:
-                break
-
             ptr = ptr.next
+
+            if ptr.elem == self.head.elem:
+                break
 
         return new_min_node
 
