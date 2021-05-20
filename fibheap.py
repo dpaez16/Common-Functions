@@ -4,6 +4,7 @@ class FibonacciHeap:
         self.size = 0
 
     def push(self, elem, key=None):
+        assert elem is not None
         node = FibonacciHeap._Node(elem, key)
 
         if self.size == 0:
@@ -14,6 +15,9 @@ class FibonacciHeap:
             node.next = front
             front.prev = node
             node.prev = self.min_node
+
+        if node.key < self.min_node.key:
+            self.min_node = key
 
         self.size += 1
 
@@ -37,6 +41,6 @@ class FibonacciHeap:
     class _Node:
         def __init__(self, elem, key):
             self.elem = elem
-            self.key = key
+            self.key = key if key is not None else elem
             self.prev = self
             self.next = self
