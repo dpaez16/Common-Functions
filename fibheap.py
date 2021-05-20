@@ -3,11 +3,14 @@ class FibonacciHeap:
         self.min_node = None
         self.head = None
         self.size = 0
+        self.node_map = {}
 
     def push(self, elem, key=None):
         assert elem is not None
+        assert elem not in self
         
         node = FibonacciHeap._Node(elem, key)
+        self.node_map[elem] = node
 
         if self.size == 0:
             self.min_node = node
@@ -113,9 +116,11 @@ class FibonacciHeap:
         self.min_node = self._update_min_node()
         self._consolidate()
 
+        del self.node_map[elem]
+
         return elem, key
 
-    def decrease_key(self):
+    def decrease_key(self, elem, new_key):
         return
 
     def root(self):
@@ -128,6 +133,9 @@ class FibonacciHeap:
 
     def __len__(self):
         return self.size
+
+    def __contains__(self, elem):
+        return elem in self.node_map
 
     class _Node:
         def __init__(self, elem, key):
