@@ -1,9 +1,13 @@
+from typing import DefaultDict
+
+
 class FibonacciHeap:
     def __init__(self):
         self.min_node = None
         self.head = None
         self.size = 0
         self.node_map = {}
+        self.n_roots = 0
 
     def push(self, elem, key=None):
         assert elem is not None
@@ -22,6 +26,7 @@ class FibonacciHeap:
             self.min_node = node
 
         self.size += 1
+        self.n_roots += 1
 
     def _insert(self, node, node_prev, root):
         front = root.next
@@ -39,8 +44,8 @@ class FibonacciHeap:
         prev.next = front
         front.prev = prev
 
-        node.prev = None
-        node.next = None
+        node.prev = self
+        node.next = self
 
     def _update_min_node(self):
         new_min_node = self.head
@@ -65,16 +70,18 @@ class FibonacciHeap:
             self._insert(child, child.prev, root.child)
 
         root.rank += 1
+        child.parent = root
+        self.n_roots -= 1
 
     def _consolidate(self):
         if self.size == 1:
             return
 
-        rank_map = [None] * 4
+        rank_map = DefaultDict(lambda: None)
         curr = self.head
         i = 0
 
-        while i < 4:
+        while i < self.n_roots:
             rank = curr.rank
             if rank_map[rank] is None:
                 rank_map[rank] = curr
@@ -121,7 +128,24 @@ class FibonacciHeap:
         return elem, key
 
     def decrease_key(self, elem, new_key):
-        return
+        assert elem in self
+
+        if new_key == self.node_map[elem].key:
+            return
+        
+        node = self.node_map[elem]
+        assert new_key < node.key
+
+        node.key = new_key
+        parent = node.parent
+
+        if parent is None:
+            self.min_node = self._update_min_node()
+        elif node.key <= parent.key:
+            return
+        else:
+            parent.child
+            return
 
     def root(self):
         assert not self.empty()
@@ -143,5 +167,7 @@ class FibonacciHeap:
             self.key = key if key is not None else elem
             self.prev = self
             self.next = self
+            self.parent = None
             self.child = None
             self.rank = 0
+            self.marked = False
