@@ -4,6 +4,7 @@ from copy import deepcopy
 from queue import Queue
 from stack import Stack
 from minheap import Minheap
+from fibheap import FibonacciHeap
 import random
 
 
@@ -405,16 +406,14 @@ class Graph:
 
         assert source in V
 
+        pq = FibonacciHeap()
         for v in V:
-            dist[v] = INFINITY
+            dist[v] = INFINITY if v != source else 0
             prev[v] = None
+            pq.push(v, dist[v])
 
-        dist[source] = 0
-        pairs = [(v, dist[v]) for v in V]
-        minHeap = Minheap(pairs)
-
-        while len(minHeap) != 0:
-            u = minHeap.pop()
+        while not pq.empty():
+            u, _ = pq.pop()
             
             neighbors = self.get_neighbors(u)
             for neighbor in neighbors:
@@ -422,7 +421,10 @@ class Graph:
                 if alt < dist[neighbor]:
                     dist[neighbor] = alt
                     prev[neighbor] = u
-                    minHeap.update_key(neighbor, alt)
+                    if neighbor not in pq:
+                        pq.push(neighbor, alt)
+                    else:
+                        pq.decrease_key(neighbor, alt)
 
         return dist, prev
 
