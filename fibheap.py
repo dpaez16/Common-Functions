@@ -37,9 +37,8 @@ class FibonacciHeap:
             ptr = ptr.next
 
         self.root_list.merge(children)
-
-        self.min_node = self.root_list.min()
         self._consolidate()
+        self.min_node = self.root_list.min()
 
         return elem, key
 
