@@ -418,13 +418,16 @@ class Graph:
             neighbors = self.get_neighbors(u)
             for neighbor in neighbors:
                 alt = dist[u] + self.get_edge_value(u, neighbor)
-                if alt < dist[neighbor]:
-                    dist[neighbor] = alt
-                    prev[neighbor] = u
-                    if neighbor not in pq:
-                        pq.push(neighbor, alt)
-                    else:
-                        pq.decrease_key(neighbor, alt)
+                if alt >= dist[neighbor]:
+                    continue
+
+                dist[neighbor] = alt
+                prev[neighbor] = u
+                
+                if neighbor not in pq:
+                    pq.push(neighbor, alt)
+                else:
+                    pq.decrease_key(neighbor, alt)
 
         return dist, prev
 
