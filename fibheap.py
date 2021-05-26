@@ -68,12 +68,23 @@ class FibonacciHeap:
         return
 
     def _get_nodes(self, ptr, other_node):
-        if ptr.data.key == other_node.data.key:
-            return ptr, other_node
-        elif ptr.data.key < other_node.data.key:
+        if ptr.data.key <= other_node.data.key:
             return ptr, other_node
         else:
             return other_node, ptr
+
+    def _cut(self, node):
+        assert isinstance(node, LL._LL_Node)
+
+        parent = node.data.parent
+        if parent is None:
+            parent.data.unmark()
+            return
+
+        parent.data.child_list.remove(node)
+        node.data.parent = None
+        self.root_list.push_node(node)
+        node.data.unmark()
 
     def decrease_key(self, elem, new_key):
         assert elem in self
@@ -90,27 +101,22 @@ class FibonacciHeap:
             self.min_node = self.root_list.min()
             return
 
-        parent.data.child_list.remove(node)
-        node.data.parent = None
-        self.root_list.push_node(node)
-        node.data.unmark()
-
-        if not parent.data.is_marked():
-            parent.data.mark()
+        if parent.data.key <= new_key:
             return
 
-        node = parent
-        while node.data.is_marked():
-            parent = node.data.parent
-            if parent is None:
-                node.data.unmark()
-                break
+        self._cut(node)
 
-            parent.child_list.remove(node)
-            node.data.parent = None
-            self.root_list.push_node(node)
-            node.data.unmark()
-            node = parent
+        node = parent
+        parent = parent.data.parent
+        while parent is not None:
+            if not node.data.is_marked():
+                node.data.mark()
+                break
+            else:
+                self._cut(node)
+
+                node = parent
+                parent = parent.data.parent
 
     def root(self):
         assert not self.empty()
