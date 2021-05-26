@@ -103,7 +103,7 @@ class FibonacciHeap:
         while node.data.is_marked():
             parent = node.data.parent
             if parent is None:
-                parent.data.unmark()
+                node.data.unmark()
                 break
 
             parent.child_list.remove(node)
