@@ -1,9 +1,7 @@
-from node import Node
 from common import INFINITY
 from copy import deepcopy
 from queue import Queue
 from stack import Stack
-from minheap import Minheap
 from fibheap import FibonacciHeap
 import random
 
@@ -413,7 +411,7 @@ class Graph:
             pq.push(v, dist[v])
 
         while not pq.empty():
-            u, _ = pq.pop()
+            u = pq.pop()
             
             neighbors = self.get_neighbors(u)
             for neighbor in neighbors:
@@ -534,18 +532,17 @@ class Graph:
         """
 
         V = self.get_vertices()
-        heap = Minheap()
+        heap = FibonacciHeap()
         cost, prev = {}, {}
-        mst = set()
-
+        
         for u in V:
             cost[u] = INFINITY
             prev[u] = None
         
         v = random.choice(V)
         cost[v] = 0
-        pairs = [(u, cost[u]) for u in V]
-        heap = Minheap(pairs)
+        for u in V:
+            heap.push(u, cost[u])
 
         while not heap.empty():
             u = heap.pop()
@@ -555,8 +552,9 @@ class Graph:
                 if v in heap and cost[v] > edge_weight:
                     cost[v] = edge_weight
                     prev[v] = u
-                    heap.update_key(v, cost[v])
+                    heap.decrease_key(v, cost[v])
 
+        mst = set()
         for v in V:
             if prev[v] is None:
                 continue
