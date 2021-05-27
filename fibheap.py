@@ -6,7 +6,7 @@ class FibonacciHeap:
         self.min_node = None
         self.size = 0
         self.node_map = {}
-        self.root_list = LL()
+        self.root_list = FibonacciHeap.LL()
 
     def push(self, elem, key=None):
         assert elem is not None
@@ -73,7 +73,7 @@ class FibonacciHeap:
             return other_node, ptr
 
     def _cut(self, node):
-        assert isinstance(node, LL._LL_Node)
+        assert isinstance(node, FibonacciHeap.LL._LL_Node)
 
         parent = node.data.parent
         if parent is None:
@@ -131,154 +131,154 @@ class FibonacciHeap:
     def __contains__(self, elem):
         return elem in self.node_map
 
-class LL:
-    def __init__(self):
-        self.head = None
-        self.tail = None
-        self.size = 0
-
-    def push(self, elem, key=None):
-        data = FibNode(elem, key)
-        node = LL._LL_Node(data)
-
-        if len(self) == 0:
-            self.head = node
-            self.tail = node
-        else:
-            self.tail.next = node
-            node.prev = self.tail
-            self.tail = node
-
-        self.size += 1
-        return node
-
-    def push_node(self, node):
-        assert isinstance(node, LL._LL_Node)
-
-        if len(self) == 0:
-            self.head = node
-            self.tail = node
-        else:
-            self.tail.next = node
-            node.prev = self.tail
-            self.tail = node
-
-        self.size += 1
-        return node
-
-    def pop(self):
-        assert len(self) > 0
-
-        node = self.tail
-
-        if len(self) == 1:
+    class LL:
+        def __init__(self):
             self.head = None
             self.tail = None
-        else:
-            self.tail = self.tail.prev
-            self.tail.next = None
+            self.size = 0
 
-        self.size -= 1
-        node.prev = None
-        node.next = None
-        return node
+        def push(self, elem, key=None):
+            data = FibonacciHeap.FibNode(elem, key)
+            node = FibonacciHeap.LL._LL_Node(data)
 
-    def remove(self, node):
-        assert isinstance(node, LL._LL_Node)
+            if len(self) == 0:
+                self.head = node
+                self.tail = node
+            else:
+                self.tail.next = node
+                node.prev = self.tail
+                self.tail = node
 
-        if node == self.tail:
-            return self.pop()
+            self.size += 1
+            return node
 
-        self.size -= 1
+        def push_node(self, node):
+            assert isinstance(node, FibonacciHeap.LL._LL_Node)
 
-        if node == self.head:
-            self.head = self.head.next
-            self.head.prev = None
+            if len(self) == 0:
+                self.head = node
+                self.tail = node
+            else:
+                self.tail.next = node
+                node.prev = self.tail
+                self.tail = node
 
+            self.size += 1
+            return node
+
+        def pop(self):
+            assert len(self) > 0
+
+            node = self.tail
+
+            if len(self) == 1:
+                self.head = None
+                self.tail = None
+            else:
+                self.tail = self.tail.prev
+                self.tail.next = None
+
+            self.size -= 1
             node.prev = None
             node.next = None
             return node
 
-        front = node.next
-        back = node.prev
+        def remove(self, node):
+            assert isinstance(node, FibonacciHeap.LL._LL_Node)
 
-        back.next = front
-        front.prev = back
+            if node == self.tail:
+                return self.pop()
 
-        node.next = None
-        node.prev = None
-        return node
+            self.size -= 1
 
-    def merge(self, other):
-        assert isinstance(other, LL)
+            if node == self.head:
+                self.head = self.head.next
+                self.head.prev = None
 
-        if len(self) == 0:
-            self.head = other.head
-            self.tail = other.tail
-            self.size = len(other)
-        else:
-            self.size += len(other)
-            self.tail.next = other.head
+                node.prev = None
+                node.next = None
+                return node
 
-            if other.head is not None:
-                other.head.prev = self.tail
+            front = node.next
+            back = node.prev
 
-            if other.tail is not None:
+            back.next = front
+            front.prev = back
+
+            node.next = None
+            node.prev = None
+            return node
+
+        def merge(self, other):
+            assert isinstance(other, FibonacciHeap.LL)
+
+            if len(self) == 0:
+                self.head = other.head
                 self.tail = other.tail
+                self.size = len(other)
+            else:
+                self.size += len(other)
+                self.tail.next = other.head
 
-    def min(self):
-        min_node = self.head
-        ptr = self.head
+                if other.head is not None:
+                    other.head.prev = self.tail
 
-        while ptr is not None:
-            min_node = min(min_node, ptr)
-            ptr = ptr.next
+                if other.tail is not None:
+                    self.tail = other.tail
 
-        return min_node
+        def min(self):
+            min_node = self.head
+            ptr = self.head
 
-    def __len__(self):
-        return self.size
+            while ptr is not None:
+                min_node = min(min_node, ptr)
+                ptr = ptr.next
 
-    class _LL_Node:
-        def __init__(self, data):
-            self.next = None
-            self.prev = None
-            self.data = data
+            return min_node
+
+        def __len__(self):
+            return self.size
+
+        class _LL_Node:
+            def __init__(self, data):
+                self.next = None
+                self.prev = None
+                self.data = data
+
+            def __lt__(self, other):
+                return self.data < other.data
+
+            def __gt__(self, other):
+                return self.data > other.data
+
+            def __eq__(self, other):
+                return self.data == other.data
+
+    class FibNode:
+        def __init__(self, elem, key):
+            self.elem = elem
+            self.key = key if key is not None else elem
+            self.parent = None
+            self.child_list = FibonacciHeap.LL()
+            self.marked = False
+
+        def rank(self):
+            return len(self.child_list)
+
+        def mark(self):
+            self.marked = True
+
+        def unmark(self):
+            self.marked = False
+
+        def is_marked(self):
+            return self.marked
 
         def __lt__(self, other):
-            return self.data < other.data
+            return self.key < other.key
 
         def __gt__(self, other):
-            return self.data > other.data
+            return self.key > other.key
 
         def __eq__(self, other):
-            return self.data == other.data
-
-class FibNode:
-    def __init__(self, elem, key):
-        self.elem = elem
-        self.key = key if key is not None else elem
-        self.parent = None
-        self.child_list = LL()
-        self.marked = False
-
-    def rank(self):
-        return len(self.child_list)
-
-    def mark(self):
-        self.marked = True
-
-    def unmark(self):
-        self.marked = False
-
-    def is_marked(self):
-        return self.marked
-
-    def __lt__(self, other):
-        return self.key < other.key
-
-    def __gt__(self, other):
-        return self.key > other.key
-
-    def __eq__(self, other):
-        return self.key == other.key and self.elem == other.elem
+            return self.key == other.key and self.elem == other.elem
