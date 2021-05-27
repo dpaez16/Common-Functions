@@ -24,7 +24,7 @@ class FibonacciHeap:
     def pop(self):
         assert not self.empty()
 
-        elem, key = self.root()
+        elem = self.root()
         self.size -= 1
         del self.node_map[elem]
 
@@ -40,7 +40,7 @@ class FibonacciHeap:
         self._consolidate()
         self.min_node = self.root_list.min()
 
-        return elem, key
+        return elem
 
     def _consolidate(self):
         rank_map = defaultdict(lambda: None)
@@ -97,13 +97,14 @@ class FibonacciHeap:
         node.data.key = new_key
         parent = node.data.parent
         if parent is None:
-            self.min_node = self.root_list.min()
+            self.min_node = min(self.min_node, node)
             return
 
         if parent.data.key <= new_key:
             return
 
         self._cut(node)
+        self.min_node = min(self.min_node, node)
 
         node = parent
         parent = parent.data.parent
@@ -119,10 +120,7 @@ class FibonacciHeap:
 
     def root(self):
         assert not self.empty()
-
-        data = self.min_node.data
-        elem, key = data.elem, data.key
-        return elem, key
+        return self.min_node.data.elem
 
     def empty(self):
         return self.__len__() == 0
