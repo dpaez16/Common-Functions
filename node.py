@@ -50,6 +50,12 @@ class Node:
     def __eq__(self, other):
         return self.data["ID"] == other.get_data()["ID"]
 
+    def __lt__(self, other):
+        return self.data["ID"] < other.get_data()["ID"]
+
+    def __gt__(self, other):
+        return self.data["ID"] > other.get_data()["ID"]
+
     def __hash__(self):
         return hash(self.data["ID"])
 
