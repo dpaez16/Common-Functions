@@ -5,6 +5,7 @@
 #include <sstream>
 #include <stack>
 #include <queue>
+#include <limits>
 #include <assert.h>
 
 typedef std::string vertex;
@@ -244,4 +245,40 @@ vertex_list Graph::bfs(vertex v) {
     }
 
     return traversalList;
+}
+
+std::pair<
+    std::unordered_map<vertex, float>, 
+    std::unordered_map<vertex, vertex>
+>
+Graph::bellmanFord(vertex v) {
+    assert(hasVertex(v));
+    assert(this->ptr->weighted);
+
+    std::unordered_map<vertex, float> dist;
+    std::unordered_map<vertex, vertex> prev;
+
+    vertex_set vertices = getVertices();
+    for (vertex u : vertices) {
+        dist[u] = std::numeric_limits<float>::max();
+    }
+    dist[v] = 0;
+
+    for (size_t it = 0; it < vertices.size() - 1; it++) {
+        for (vertex u : vertices) {
+            vertex_set neighbors = getNeighbors(u);
+            for (vertex neighbor : neighbors) {
+                float alt = dist[u] + getEdgeValue(u, neighbor);
+                if (alt < dist[neighbor]) {
+                    dist[neighbor] = alt;
+                    prev[neighbor] = u;
+                }
+            }
+        }
+    }
+
+    return std::pair<
+        std::unordered_map<vertex, float>, 
+        std::unordered_map<vertex, vertex>
+    >(dist, prev);
 }
