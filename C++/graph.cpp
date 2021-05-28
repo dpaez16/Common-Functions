@@ -57,3 +57,10 @@ Graph::~Graph() {
 bool Graph::empty() {
     return this->ptr->vertices.size() == 0;
 }
+
+vertex_set Graph::getVertices() {
+    return this->ptr->vertices;
+}
+std::unordered_map<vertex, vertex_set> Graph::getEdges() {
+    return this->ptr->neighborsMap;
+}

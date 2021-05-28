@@ -3,6 +3,7 @@
 
 #include <unordered_set>
 #include <unordered_map>
+#include <string>
 #include <vector>
 
 class Graph {
@@ -12,8 +13,8 @@ public:
     Graph& operator=(const Graph &);
     // void reverse();
     bool empty();
-    // std::unordered_set<std::string> getVertices();
-    // std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();
+    std::unordered_set<std::string> getVertices();
+    std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();
     // bool isAdjacent(std::string a, std::string b);
     // void flipEdge(std::string a, std::string b);
     // std::unordered_set<std::string> getNeighbors(std::string v);
