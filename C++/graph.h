@@ -11,7 +11,7 @@ public:
     Graph(bool directed, bool weighted);
     Graph(const Graph &);
     Graph& operator=(const Graph &);
-    // void reverse();
+    Graph reverse();
     bool empty();
     std::unordered_set<std::string> getVertices();
     std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();

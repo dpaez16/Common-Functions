@@ -171,3 +171,24 @@ void Graph::removeVertex(vertex v) {
         removeEdge(v, u);
     }
 }
+
+Graph Graph::reverse() {
+    assert(!this->ptr->directed);
+
+    Graph revG(this->ptr->directed, this->ptr->weighted);
+    vertex_set vertices = getVertices();
+    float edgeValue = 0;
+
+    for (vertex u : vertices) {
+        revG.addVertex(u);
+        vertex_set neighbors = getNeighbors(u);
+        for (vertex v : neighbors) {
+            if (this->ptr->weighted) 
+                edgeValue = getEdgeValue(u, v);
+
+            revG.addEdge(v, u, edgeValue);
+        }
+    }
+
+    return revG;
+}
