@@ -139,14 +139,15 @@ vertex_set Graph::getNeighbors(vertex v) {
 
 vertex_set Graph::getIncomingNeighbors(vertex v) {
     vertex_set vertices = getVertices();
-    
+    vertex_set incomingNeighbors;
+
     for (vertex u : vertices) {
-        if (isAdjacent(u, v)) continue;
+        if (!isAdjacent(u, v)) continue;
 
-        vertices.erase(u);
+        incomingNeighbors.insert(u);
     }
-
-    return vertices;
+    
+    return incomingNeighbors;
 }
 
 bool Graph::isSourceVertex(vertex v) {
