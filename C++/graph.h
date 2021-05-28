@@ -15,13 +15,13 @@ public:
     bool empty();
     std::unordered_set<std::string> getVertices();
     std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();
-    // bool isAdjacent(std::string a, std::string b);
+    bool isAdjacent(std::string a, std::string b);
     // void flipEdge(std::string a, std::string b);
     // std::unordered_set<std::string> getNeighbors(std::string v);
     // std::unordered_set<std::string> getIncomingNeighbors(std::string v);
     // bool isSourceVertex(std::string v);
     // bool isSinkVertex(std::string v);
-    // bool hasVertex(std::string v);
+    bool hasVertex(std::string v);
     // void addVertex(std::string v);
     // void addEdge(std::string a, std::string b, float edgeValue = 0);
     // void removeVertex(std::string v);

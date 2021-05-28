@@ -64,3 +64,13 @@ vertex_set Graph::getVertices() {
 std::unordered_map<vertex, vertex_set> Graph::getEdges() {
     return this->ptr->neighborsMap;
 }
+
+bool Graph::isAdjacent(vertex a, vertex b) {
+    if (!hasVertex(a) || !hasVertex(b)) return false;
+
+    return this->ptr->neighborsMap[a].find(b) != this->ptr->neighborsMap[a].end();
+}
+
+bool Graph::hasVertex(vertex v) {
+    return this->ptr->vertices.find(v) != this->ptr->vertices.end();
+}
