@@ -53,3 +53,7 @@ Graph & Graph::operator=(const Graph & other) {
 Graph::~Graph() {
     delete this->ptr;
 }
+
+bool Graph::empty() {
+    return this->ptr->vertices.size() == 0;
+}

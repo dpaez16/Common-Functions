@@ -11,7 +11,7 @@ public:
     Graph(const Graph &);
     Graph& operator=(const Graph &);
     // void reverse();
-    // bool empty();
+    bool empty();
     // std::unordered_set<std::string> getVertices();
     // std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();
     // bool isAdjacent(std::string a, std::string b);
