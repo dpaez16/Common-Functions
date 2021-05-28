@@ -135,7 +135,39 @@ vertex_set Graph::getNeighbors(vertex v) {
     return this->ptr->neighborsMap[v];
 }
 
+vertex_set Graph::getIncomingNeighbors(vertex v) {
+    vertex_set vertices = getVertices();
+    
+    for (vertex u : vertices) {
+        if (isAdjacent(u, v)) continue;
+
+        vertices.erase(u);
+    }
+
+    return vertices;
+}
+
+bool Graph::isSourceVertex(vertex v) {
+    assert(hasVertex(v));
+    return getIncomingNeighbors(v).size() == 0;
+}
+
 bool Graph::isSinkVertex(vertex v) {
     assert(hasVertex(v));
     return getNeighbors(v).size() == 0;
+}
+
+void Graph::removeVertex(vertex v) {
+    if (!hasVertex(v)) return;
+
+    this->ptr->vertices.erase(v);
+    vertex_set incomingNeighbors = getIncomingNeighbors(v);
+    for (vertex u : incomingNeighbors) {
+        removeEdge(u, v);
+    }
+
+    vertex_set neighbors = getNeighbors(v);
+    for (vertex u : neighbors) {
+        removeEdge(v, u);
+    }
 }
