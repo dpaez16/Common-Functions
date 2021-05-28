@@ -129,3 +129,8 @@ float Graph::getEdgeValue(vertex a, vertex b) {
 
     return this->ptr->edgeValueMap[edge(a, b)];
 }
+
+vertex_set Graph::getNeighbors(vertex v) {
+    assert(hasVertex(v));
+    return this->ptr->neighborsMap[v];
+}

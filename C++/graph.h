@@ -17,7 +17,7 @@ public:
     std::unordered_map<std::string, std::unordered_set<std::string>> getEdges();
     bool isAdjacent(std::string a, std::string b);
     void flipEdge(std::string a, std::string b);
-    // std::unordered_set<std::string> getNeighbors(std::string v);
+    std::unordered_set<std::string> getNeighbors(std::string v);
     // std::unordered_set<std::string> getIncomingNeighbors(std::string v);
     // bool isSourceVertex(std::string v);
     // bool isSinkVertex(std::string v);
