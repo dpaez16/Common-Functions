@@ -134,3 +134,8 @@ vertex_set Graph::getNeighbors(vertex v) {
     assert(hasVertex(v));
     return this->ptr->neighborsMap[v];
 }
+
+bool Graph::isSinkVertex(vertex v) {
+    assert(hasVertex(v));
+    return getNeighbors(v).size() == 0;
+}
