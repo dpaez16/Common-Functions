@@ -28,8 +28,8 @@ public:
     void removeEdge(std::string a, std::string b);
     float getEdgeValue(std::string a, std::string b);
     void setEdgeValue(std::string a, std::string b, float edgeValue);
-    // std::vector<std::string> dfs();
-    // std::vector<std::string> bfs();
+    std::vector<std::string> dfs(std::string v);
+    std::vector<std::string> bfs(std::string v);
     // std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> dijkstra(std::string v);
     // std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> bellmanFord(std::string v);
     // std::unordered_map<std::pair<std::string, std::string>, std::pair<float, std::vector<std::string>>, edge_hash> floydWarshall();

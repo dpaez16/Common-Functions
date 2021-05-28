@@ -3,6 +3,8 @@
 #include <iostream>
 #include <functional>
 #include <sstream>
+#include <stack>
+#include <queue>
 #include <assert.h>
 
 typedef std::string vertex;
@@ -191,4 +193,54 @@ Graph Graph::reverse() {
     }
 
     return revG;
+}
+
+vertex_list Graph::dfs(vertex v) {
+    vertex_list traversalList;
+    std::stack<vertex> stk;
+    vertex_set visited;
+    stk.push(v);
+
+    while (!stk.empty()) {
+        vertex u = stk.top();
+        stk.pop();
+
+        if (visited.find(u) != visited.end())
+            continue;
+
+        visited.insert(u);
+        traversalList.push_back(u);
+
+        vertex_set neighbors = getNeighbors(u);
+        for (vertex neighbor : neighbors) {
+            stk.push(neighbor);
+        }
+    }
+
+    return traversalList;
+}
+
+vertex_list Graph::bfs(vertex v) {
+    vertex_list traversalList;
+    std::queue<vertex> q;
+    vertex_set visited;
+    q.push(v);
+
+    while (!q.empty()) {
+        vertex u = q.front();
+        q.pop();
+
+        if (visited.find(u) != visited.end())
+            continue;
+
+        visited.insert(u);
+        traversalList.push_back(u);
+
+        vertex_set neighbors = getNeighbors(u);
+        for (vertex neighbor : neighbors) {
+            q.push(neighbor);
+        }
+    }
+
+    return traversalList;
 }
