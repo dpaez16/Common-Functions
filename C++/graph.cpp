@@ -378,16 +378,30 @@ vertex_list Graph::topologicalSort() {
 void dfsHelper(Graph * g, vertex & v, vertex_list & L) {
     static vertex_set visited;
 
-    if (visited.find(v) != visited.end())
-        return;
+    std::stack<vertex> stk;
+    std::stack<vertex> dfs;
+    stk.push(v);
 
-    visited.insert(v);
-    vertex_set neighbors = g->getNeighbors(v);
-    for (vertex neighbor : neighbors) {
-        dfsHelper(g, neighbor, L);
+    while (!stk.empty()) {
+        vertex u = stk.top();
+        stk.pop();
+
+        if (visited.find(u) != visited.end()) 
+            continue;
+
+        dfs.push(u);
+        visited.insert(u);
+
+        vertex_set neighbors = g->getNeighbors(u);
+        for (vertex neighbor : neighbors) {
+            stk.push(neighbor);
+        }
     }
 
-    L.push_back(v);
+    while (!dfs.empty()) {
+        L.push_back(dfs.top());
+        dfs.pop();
+    }
 }
 
 std::vector<vertex_set> Graph::stronglyConnectedComponents() {
@@ -401,9 +415,8 @@ std::vector<vertex_set> Graph::stronglyConnectedComponents() {
     vertex_set visited;
     std::vector<vertex_set> components;
 
-    for (vertex v : vertices) {
+    for (vertex v : vertices)
         dfsHelper(this, v, L);
-    }
 
     std::unordered_map<vertex, size_t> componentMap;
 
