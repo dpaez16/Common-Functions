@@ -182,7 +182,7 @@ void Graph::removeVertex(vertex v) {
 }
 
 Graph Graph::reverse() {
-    assert(!this->ptr->directed);
+    assert(this->ptr->directed);
 
     Graph revG(this->ptr->directed, this->ptr->weighted);
     vertex_set vertices = getVertices();
@@ -373,4 +373,69 @@ vertex_list Graph::topologicalSort() {
     }
 
     return tps;
+}
+
+void dfsHelper(Graph * g, vertex & v, vertex_list & L) {
+    static vertex_set visited;
+
+    if (visited.find(v) != visited.end())
+        return;
+
+    visited.insert(v);
+    vertex_set neighbors = g->getNeighbors(v);
+    for (vertex neighbor : neighbors) {
+        dfsHelper(g, neighbor, L);
+    }
+
+    L.push_back(v);
+}
+
+std::vector<vertex_set> Graph::stronglyConnectedComponents() {
+    assert(this->ptr->directed);
+
+    if (empty()) return {};
+
+    Graph revG = reverse();
+    vertex_set vertices = getVertices();
+    vertex_list L;
+    vertex_set visited;
+    std::vector<vertex_set> components;
+
+    for (vertex v : vertices) {
+        dfsHelper(this, v, L);
+    }
+
+    std::unordered_map<vertex, size_t> componentMap;
+
+    size_t componentCount = 0;
+    for (auto it = L.rbegin(); it != L.rend(); it++) {
+        vertex u = *it;
+        std::stack<std::pair<vertex, vertex>> stk;
+        stk.push({u, u});
+
+        while (!stk.empty()) {
+            std::pair<vertex, vertex> p = stk.top();
+            vertex root = p.first;
+            u = p.second;
+            stk.pop();
+
+            if (componentMap.find(u) != componentMap.end())
+                continue;
+
+            componentMap[u] = (u == root) ? componentCount++ : componentMap[root];
+
+            vertex_set neighbors = revG.getNeighbors(u);
+            for (vertex neighbor : neighbors) {
+                stk.push({root, neighbor});
+            }
+        }
+    }
+
+    components.resize(componentCount);
+    for (vertex v : L) {
+        size_t component = componentMap[v];
+        components[component].insert(v);
+    }
+
+    return components;
 }

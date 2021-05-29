@@ -36,7 +36,7 @@ public:
     std::pair<std::vector<std::vector<float>>, std::vector<std::vector<int>>> floydWarshall();
     // std::unordered_set<std::pair<std::string, std::string>> mst();
     std::vector<std::string> topologicalSort();
-    // std::vector<std::unordered_set<std::string>> stronglyConnectedComponents();
+    std::vector<std::unordered_set<std::string>> stronglyConnectedComponents();
     ~Graph();
 
 private:
