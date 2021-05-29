@@ -2,8 +2,6 @@
 
 #include <unordered_map>
 
-struct FibNode;
-
 class LinkedList {
     typedef struct LLNode {
         LLNode * prev;
@@ -12,6 +10,7 @@ class LinkedList {
     } LLNode;
 
     LinkedList();
+    ~LinkedList();
     LLNode * push(std::string, float key);
     LLNode * pushNode(LLNode * node);
     LLNode * remove(LLNode * node);
