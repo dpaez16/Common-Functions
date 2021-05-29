@@ -1,7 +1,7 @@
 #include "fibheap.h"
 
 #include <unordered_map>
-#include <assert>
+#include <assert.h>
 
 class LinkedList {
 public:
