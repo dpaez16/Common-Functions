@@ -6,6 +6,7 @@
 #include <stack>
 #include <queue>
 #include <limits>
+#include <algorithm>
 #include <assert.h>
 
 typedef std::string vertex;
@@ -269,10 +270,10 @@ Graph::bellmanFord(vertex v) {
             vertex_set neighbors = getNeighbors(u);
             for (vertex neighbor : neighbors) {
                 float alt = dist[u] + getEdgeValue(u, neighbor);
-                if (alt < dist[neighbor]) {
-                    dist[neighbor] = alt;
-                    prev[neighbor] = u;
-                }
+                if (alt >= dist[neighbor]) continue; 
+
+                dist[neighbor] = alt;
+                prev[neighbor] = u;
             }
         }
     }
@@ -281,4 +282,53 @@ Graph::bellmanFord(vertex v) {
         std::unordered_map<vertex, float>, 
         std::unordered_map<vertex, vertex>
     >(dist, prev);
+}
+
+std::pair<
+    std::vector<std::vector<float>>,
+    std::vector<std::vector<int>>
+>
+Graph::floydWarshall() {
+    assert(this->ptr->directed && this->ptr->weighted);
+    
+    vertex_set vertices = getVertices();
+    vertex_list verticesList(vertices.begin(), vertices.end());
+    std::sort(verticesList.begin(), verticesList.end());
+    size_t n = vertices.size();
+
+    float inf = std::numeric_limits<float>::max();
+    std::vector<std::vector<float>> dist(n, std::vector<float>(n, inf));
+    std::vector<std::vector<int>> next(n, std::vector<int>(n, -1));
+
+    for (size_t i = 0; i < n; i++) {
+        for (size_t j = 0; j < n; i++) {
+            vertex a = verticesList[i];
+            vertex b = verticesList[j];
+
+            if (!isAdjacent(a, b)) continue;
+            
+            dist[i][j] = getEdgeValue(a, b);
+            next[i][j] = j;
+        }
+
+        dist[i][i] = 0;
+        next[i][i] = i;
+    }
+
+    for (size_t k = 0; k < n; k++) {
+        for (size_t i = 0; i < n; i++) {
+            for (size_t j = 0; j < n; j++) {
+                float alt = dist[i][k] + dist[k][j];
+                if (dist[i][j] <= alt) continue;
+
+                dist[i][j] = alt;
+                next[i][j] = next[i][k];
+            }
+        }
+    }
+
+    return std::pair<
+        std::vector<std::vector<float>>,
+        std::vector<std::vector<int>>
+    >(dist, next);
 }
