@@ -343,17 +343,17 @@ vertex_list Graph::topologicalSort() {
     Graph clone(*this);
     vertex_list tps;
     vertex_set vertices = getVertices();
-    vertex_set sourceVertices;
+    std::stack<vertex> stk;
 
     for (vertex v : vertices) {
         if (!isSourceVertex(v)) continue;
 
-        sourceVertices.insert(v);
+        stk.push(v);
     }
 
-    while (!sourceVertices.empty()) {
-        vertex sourceVertex = *sourceVertices.begin();
-        sourceVertices.erase(sourceVertex);
+    while (!stk.empty()) {
+        vertex sourceVertex = stk.top();
+        stk.pop();
         tps.push_back(sourceVertex);
 
         vertex_set neighbors = clone.getNeighbors(sourceVertex);
@@ -362,7 +362,7 @@ vertex_list Graph::topologicalSort() {
             if (!clone.isSourceVertex(neighbor)) 
                 continue;
 
-            sourceVertices.insert(neighbor);
+            stk.push(neighbor);
         }
     }
 
