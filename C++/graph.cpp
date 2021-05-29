@@ -103,7 +103,11 @@ void Graph::setEdgeValue(vertex a, vertex b, float edgeValue) {
     if (!this->ptr->directed) this->ptr->edgeValueMap[edge(b, a)] = edgeValue;
 }
 
-void Graph::addEdge(vertex a, vertex b, float edgeValue = 0) {
+void Graph::addEdge(vertex a, vertex b) {
+    addEdge(a, b, 0);
+}
+
+void Graph::addEdge(vertex a, vertex b, float edgeValue) {
     addVertex(a);
     addVertex(b);
 
@@ -331,4 +335,42 @@ Graph::floydWarshall() {
         std::vector<std::vector<float>>,
         std::vector<std::vector<int>>
     >(dist, next);
+}
+
+vertex_list Graph::topologicalSort() {
+    assert(this->ptr->directed);
+
+    Graph clone(*this);
+    vertex_list tps;
+    vertex_set vertices = getVertices();
+    vertex_set sourceVertices;
+
+    for (vertex v : vertices) {
+        if (!isSourceVertex(v)) continue;
+
+        sourceVertices.insert(v);
+    }
+
+    while (!sourceVertices.empty()) {
+        vertex sourceVertex = *sourceVertices.begin();
+        sourceVertices.erase(sourceVertex);
+        tps.push_back(sourceVertex);
+
+        vertex_set neighbors = clone.getNeighbors(sourceVertex);
+        for (vertex neighbor : neighbors) {
+            clone.removeEdge(sourceVertex, neighbor);
+            if (!clone.isSourceVertex(neighbor)) 
+                continue;
+
+            sourceVertices.insert(neighbor);
+        }
+    }
+
+    for (vertex v : vertices) {
+        if (clone.getNeighbors(v).size() == 0) continue;
+
+        return {};
+    }
+
+    return tps;
 }

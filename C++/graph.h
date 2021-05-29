@@ -23,6 +23,7 @@ public:
     bool isSinkVertex(std::string v);
     bool hasVertex(std::string v);
     void addVertex(std::string v);
+    void addEdge(std::string a, std::string b);
     void addEdge(std::string a, std::string b, float edgeValue);
     void removeVertex(std::string v);
     void removeEdge(std::string a, std::string b);
@@ -34,7 +35,7 @@ public:
     std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> bellmanFord(std::string v);
     std::pair<std::vector<std::vector<float>>, std::vector<std::vector<int>>> floydWarshall();
     // std::unordered_set<std::pair<std::string, std::string>> mst();
-    // std::vector<std::string> topologicalSort();
+    std::vector<std::string> topologicalSort();
     // std::vector<std::unordered_set<std::string>> stronglyConnectedComponents();
     ~Graph();
 
