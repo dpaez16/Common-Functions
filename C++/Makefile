@@ -1,10 +1,13 @@
 CC=g++
 CC_FLAGS=-lm -Wall -O2
 
-build: main.o graph.o
+build: main.o graph.o fibheap.o
 	$(CC) $(CC_FLAGS) -o test $(^)
 
-main.o: main.cpp graph.h
+main.o: main.cpp graph.h fibheap.h
+	$(CC) $(CC_FLAGS) -c $(^)
+
+fibheap.o: fibheap.h fibheap.cpp
 	$(CC) $(CC_FLAGS) -c $(^)
 
 graph.o: graph.h graph.cpp

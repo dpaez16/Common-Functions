@@ -1,6 +1,5 @@
 #include "graph.h"
 
-#include <iostream>
 #include <functional>
 #include <sstream>
 #include <stack>
