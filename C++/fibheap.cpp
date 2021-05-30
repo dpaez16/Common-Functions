@@ -35,7 +35,7 @@ FibonacciHeap::FibonacciHeap(bool reverse) {
     this->ptr->nodeMap = std::unordered_map<std::string, FibNode *>();
 }
 
-void FibonacciHeap::push(std::string elem, float key) {
+FibNode * createFibNode(std::string elem, float key) {
     FibNode * node = new FibNode;
     node->elem = elem;
     node->key = key;
@@ -47,12 +47,18 @@ void FibonacciHeap::push(std::string elem, float key) {
     node->rank = 0;
     node->marked = false;
 
+    return node;
+}
+
+void FibonacciHeap::push(std::string elem, float key) {
+    FibNode * node = createFibNode(elem, key);
+
     this->ptr->size++;
     if (this->ptr->size == 1) {
         this->ptr->rootHead = node;
         this->ptr->rootTail = node;
         this->ptr->minNode = node;
-	return;
+	    return;
     }
 
     this->ptr->rootTail->next = node;
