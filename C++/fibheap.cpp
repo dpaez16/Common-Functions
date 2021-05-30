@@ -75,3 +75,7 @@ std::string FibonacciHeap::top() {
 size_t FibonacciHeap::size() {
     return this->ptr->size;
 }
+
+bool FibonacciHeap::empty() {
+    return this->ptr->size == 0;
+}
