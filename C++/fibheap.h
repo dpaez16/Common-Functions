@@ -17,6 +17,7 @@ public:
     //~FibonacciHeap();
 
 private:
+    void consolidate();
     struct ClassVars;
     ClassVars * ptr;
 };

@@ -107,9 +107,21 @@ FibNode * findMinNode(FibNode *& head, bool reverse) {
     return minNode;
 }
 
-void consolidate(FibNode *& rootHead, FibNode *& rootTail, bool reverse) {
+std::pair<FibNode *, FibNode *> getNodes(FibNode *& a, FibNode *& b, bool reverse) {
+    std::pair<FibNode *, FibNode *> p(a, b);
+    std::pair<FibNode *, FibNode *> p2(b, a);
+    
+    if (reverse) {
+        return a->key < b->key ? p2 : p;
+    }
+
+    return a->key < b->key ? p : p2;
+}
+
+void FibonacciHeap::consolidate() {
     std::unordered_map<size_t, FibNode *> rankMap;
-    FibNode * ptr = rootHead;
+    FibNode * ptr = this->ptr->rootHead;
+    bool reverse = this->ptr->reverse;
 
     while (ptr != NULL) {
         size_t rank = ptr->rank;
@@ -123,12 +135,35 @@ void consolidate(FibNode *& rootHead, FibNode *& rootTail, bool reverse) {
             std::pair<FibNode *, FibNode *> nodes = getNodes(ptr, otherNode, reverse);
             FibNode * mainNode = nodes.first;
             FibNode * childNode = nodes.second;
-            remove(childNode);
-            childNode->parent = mainNode;
-            mainNode->rank++;
+            
+            // remove child node from root list
+            FibNode * back = childNode->prev;
+            FibNode * front = childNode->next;
+            childNode->prev = NULL;
+            childNode->next = NULL;
 
+            if (childNode == this->ptr->rootHead) {
+                front->prev = NULL;
+                this->ptr->rootHead = this->ptr->rootHead->next;
+            } else if (childNode == this->ptr->rootTail) {
+                back->next = NULL;
+                this->ptr->rootTail = back;
+            }
+
+            // attach child node to main node
+            childNode->parent = mainNode;
+            if (mainNode->rank == 0) {
+                mainNode->childHead = childNode;
+                mainNode->childTail = childNode;
+            } else {
+                mainNode->childTail->next = childNode;
+                childNode->prev = mainNode->childTail;
+                mainNode->childTail = childNode;
+            }
+            mainNode->rank++;
+            
             rankMap[rank] = NULL;
-            ptr = rootHead;
+            ptr = this->ptr->rootHead;
         }
     }
 }
@@ -161,6 +196,6 @@ void FibonacciHeap::pop() {
 
     this->ptr->rootTail->next = childHead;
     this->ptr->rootTail = childTail;
-    consolidate(this->ptr->rootHead, this->ptr->rootTail, this->ptr->reverse);
+    consolidate();
     this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
 }
