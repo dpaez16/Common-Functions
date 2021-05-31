@@ -34,7 +34,7 @@ public:
     std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> dijkstra(std::string v);
     std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> bellmanFord(std::string v);
     std::pair<std::vector<std::vector<float>>, std::vector<std::vector<int>>> floydWarshall();
-    // std::unordered_set<std::pair<std::string, std::string>> mst();
+    std::vector<std::pair<std::string, std::string>> mst();
     std::vector<std::string> topologicalSort();
     std::vector<std::unordered_set<std::string>> stronglyConnectedComponents();
     ~Graph();

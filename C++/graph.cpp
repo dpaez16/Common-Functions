@@ -382,6 +382,53 @@ Graph::floydWarshall() {
     >(dist, next);
 }
 
+std::vector<edge> Graph::mst() {
+    assert(this->ptr->weighted);
+
+    vertex_set vertices = getVertices();
+    FibonacciHeap heap = FibonacciHeap();
+    
+    float inf = std::numeric_limits<float>::max();
+    std::unordered_map<vertex, float> cost;
+    std::unordered_map<vertex, vertex> prev;
+
+    for (vertex v : vertices) {
+        cost[v] = inf;
+    }
+
+    vertex v = *vertices.begin();
+    cost[v] = 0;
+
+    for (vertex u : vertices) {
+        heap.push(u, cost[u]);
+    }
+
+    while (!heap.empty()) {
+        vertex u = heap.top();
+        heap.pop();
+
+        vertex_set neighbors = getNeighbors(u);
+        for (vertex v : neighbors) {
+            float edgeWeight = getEdgeValue(u, v);
+            if (heap.contains(v) && cost[v] > edgeWeight) {
+                cost[v] = edgeWeight;
+                prev[v] = u;
+                heap.decreaseKey(v, cost[v]);
+            }
+        }
+    }
+
+    std::unordered_set<edge, edge_hash> mstSet;
+    for (vertex v : vertices) {
+        if (prev.find(v) == prev.end()) continue;
+
+        edge e = prev[v] < v ? edge(prev[v], v) : edge(v, prev[v]);
+        mstSet.insert(e);
+    }
+
+    return std::vector<edge>(mstSet.begin(), mstSet.end());
+}
+
 vertex_list Graph::topologicalSort() {
     assert(this->ptr->directed);
 
