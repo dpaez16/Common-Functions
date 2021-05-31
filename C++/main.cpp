@@ -16,5 +16,12 @@ int main() {
     heap.pop();
     cout << heap.top() << endl;
 
+    Trie t;
+    t.insert("abc");
+    t.insert("abcd");
+    t.insert("abce");
+    t.insert("abcf");
+    t.erase("abce");
+
     return 0;
 }
