@@ -48,6 +48,8 @@ Graph::Graph(const Graph & other) {
 Graph & Graph::operator=(const Graph & other) {
     if (this == &other) return *this;
 
+    this->~Graph();
+
     this->ptr->directed = other.ptr->directed;
     this->ptr->weighted = other.ptr->weighted;
     this->ptr->vertices = vertex_set(other.ptr->vertices);

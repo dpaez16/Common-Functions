@@ -82,6 +82,7 @@ FibonacciHeap::FibonacciHeap(const FibonacciHeap & other) {
 FibonacciHeap & FibonacciHeap::operator=(const FibonacciHeap & other) {
     if (this == &other) return *this;
     
+    this->~FibonacciHeap();
     copy(other);
     return *this;
 }
