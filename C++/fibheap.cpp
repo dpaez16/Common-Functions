@@ -25,7 +25,11 @@ struct FibonacciHeap::ClassVars {
     std::unordered_map<std::string, FibNode *> nodeMap;
 };
 
-FibonacciHeap::FibonacciHeap(bool reverse = false) {
+FibonacciHeap::FibonacciHeap() {
+    FibonacciHeap(false);
+}
+
+FibonacciHeap::FibonacciHeap(bool reverse) {
     this->ptr = new ClassVars;
     this->ptr->size = 0;
     this->ptr->reverse = reverse;
@@ -90,6 +94,10 @@ FibonacciHeap::~FibonacciHeap() {
     delete this->ptr;
 }
 
+bool FibonacciHeap::contains(std::string elem) {
+    return this->ptr->nodeMap.find(elem) != this->ptr->nodeMap.end();
+}
+
 FibNode * createFibNode(std::string elem, float key) {
     FibNode * node = new FibNode;
     node->elem = elem;
@@ -114,7 +122,7 @@ FibNode * getMinNode(FibNode *& a, FibNode *& b, bool reverse) {
 }
 
 void FibonacciHeap::push(std::string elem, float key) {
-    assert(this->ptr->nodeMap.find(elem) == this->ptr->nodeMap.end());
+    assert(!contains(elem));
 
     FibNode * node = createFibNode(elem, key);
     this->ptr->nodeMap[elem] = node;
@@ -286,7 +294,7 @@ void cut(FibNode *& node) {
 }
 
 void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
-    assert(this->ptr->nodeMap.find(elem) != this->ptr->nodeMap.end());
+    assert(contains(elem));
 
     FibNode * node = this->ptr->nodeMap[elem];
     if (newKey == node->key) return;

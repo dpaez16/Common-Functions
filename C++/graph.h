@@ -31,7 +31,7 @@ public:
     void setEdgeValue(std::string a, std::string b, float edgeValue);
     std::vector<std::string> dfs(std::string v);
     std::vector<std::string> bfs(std::string v);
-    // std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> dijkstra(std::string v);
+    std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> dijkstra(std::string v);
     std::pair<std::unordered_map<std::string, float>, std::unordered_map<std::string, std::string>> bellmanFord(std::string v);
     std::pair<std::vector<std::vector<float>>, std::vector<std::vector<int>>> floydWarshall();
     // std::unordered_set<std::pair<std::string, std::string>> mst();

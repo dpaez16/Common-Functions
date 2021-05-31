@@ -1,5 +1,3 @@
-#include "graph.h"
-
 #include <functional>
 #include <sstream>
 #include <stack>
@@ -7,6 +5,9 @@
 #include <limits>
 #include <algorithm>
 #include <assert.h>
+
+#include "fibheap.h"
+#include "graph.h"
 
 typedef std::string vertex;
 typedef std::pair<vertex, vertex> edge;
@@ -251,6 +252,49 @@ vertex_list Graph::bfs(vertex v) {
     }
 
     return traversalList;
+}
+
+std::pair<
+    std::unordered_map<vertex, float>, 
+    std::unordered_map<vertex, vertex>
+>
+Graph::dijkstra(vertex v) {
+    assert(hasVertex(v));
+    assert(this->ptr->weighted);
+
+    std::unordered_map<vertex, float> dist;
+    std::unordered_map<vertex, vertex> prev;
+
+    FibonacciHeap pq = FibonacciHeap();
+    vertex_set vertices = getVertices();
+    float inf = std::numeric_limits<float>::max();
+
+    for (vertex u : vertices) {
+        dist[u] = u != v ? inf : 0;
+        pq.push(u, dist[u]);
+    }
+
+    while (!pq.empty()) {
+        vertex u = pq.top();
+        pq.pop();
+
+        vertex_set neighbors = getNeighbors(u);
+        for (vertex neighbor : neighbors) {
+            float alt = dist[u] + getEdgeValue(u, neighbor);
+            if (alt >= dist[neighbor]) continue;
+
+            dist[neighbor] = alt;
+            prev[neighbor] = u;
+
+            if (!pq.contains(neighbor)) pq.push(neighbor, alt);
+            else pq.decreaseKey(neighbor, alt);
+        }
+    }
+
+    return std::pair<
+        std::unordered_map<vertex, float>, 
+        std::unordered_map<vertex, vertex>
+    >(dist, prev);
 }
 
 std::pair<
