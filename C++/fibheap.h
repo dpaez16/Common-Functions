@@ -6,8 +6,8 @@
 class FibonacciHeap {
 public:
     FibonacciHeap(bool reverse);
-    //FibonacciHeap(const FibonacciHeap &);
-    //FibonacciHeap& operator=(const FibonacciHeap &);
+    FibonacciHeap(const FibonacciHeap &);
+    FibonacciHeap& operator=(const FibonacciHeap &);
     void push(std::string elem, float key);
     std::string top();
     void pop();
@@ -18,6 +18,7 @@ public:
 
 private:
     void consolidate();
+    void copy(const FibonacciHeap &);
     struct ClassVars;
     ClassVars * ptr;
 };

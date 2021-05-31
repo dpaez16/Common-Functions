@@ -35,6 +35,53 @@ FibonacciHeap::FibonacciHeap(bool reverse = false) {
     this->ptr->nodeMap = std::unordered_map<std::string, FibNode *>();
 }
 
+void FibonacciHeap::copy(const FibonacciHeap & other) {
+    this->ptr = new ClassVars;
+    this->ptr->size = 0;
+    this->ptr->reverse = other.ptr->reverse;
+    this->ptr->minNode = NULL;
+    this->ptr->rootHead = NULL;
+    this->ptr->rootTail = NULL;
+    this->ptr->nodeMap = std::unordered_map<std::string, FibNode *>();
+
+    for (std::pair<std::string, FibNode *> kvPair : other.ptr->nodeMap) {
+        std::string elem = kvPair.first;
+        this->push(elem, kvPair.second->key);
+    }
+
+    for (std::pair<std::string, FibNode *> kvPair : this->ptr->nodeMap) {
+        std::string elem = kvPair.first;
+        FibNode * node = kvPair.second;
+        FibNode * otherNode = other.ptr->nodeMap[elem];
+
+        FibNode * parent = otherNode->parent;
+        FibNode * next = otherNode->next;
+        FibNode * prev = otherNode->prev;
+        FibNode * childHead = otherNode->childHead;
+        FibNode * childTail = otherNode->childTail;
+
+        if (parent != NULL) node->parent = this->ptr->nodeMap[parent->elem];
+        if (node->next != NULL) node->next = this->ptr->nodeMap[next->elem];
+        if (node->prev != NULL) node->prev = this->ptr->nodeMap[prev->elem];
+        if (node->childHead != NULL) node->childHead = this->ptr->nodeMap[childHead->elem];
+        if (node->childTail != NULL) node->childTail = this->ptr->nodeMap[childTail->elem];
+
+        node->rank = otherNode->rank;
+        node->marked = otherNode->marked;
+    }
+}
+
+FibonacciHeap::FibonacciHeap(const FibonacciHeap & other) {
+    copy(other);
+}
+
+FibonacciHeap & FibonacciHeap::operator=(const FibonacciHeap & other) {
+    if (this == &other) return *this;
+    
+    copy(other);
+    return *this;
+}
+
 FibonacciHeap::~FibonacciHeap() {
     for (std::pair<std::string, FibNode *> kvPair : this->ptr->nodeMap) {
         delete kvPair.second;
@@ -256,7 +303,7 @@ void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
     }
 
     if (parent->key <= newKey) return;
-    
+
     cut(node);
     this->ptr->rootTail->next = node;
     node->prev = this->ptr->rootTail;
