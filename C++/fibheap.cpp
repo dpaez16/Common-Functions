@@ -207,3 +207,79 @@ void FibonacciHeap::pop() {
     consolidate();
     this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
 }
+
+void cut(FibNode *& node) {
+    FibNode * parent = node->parent;
+    if (parent == NULL) {
+        parent->marked = false;
+        return;
+    }
+
+    // remove node from parent's child list
+    FibNode * head = parent->childHead;
+    FibNode * tail = parent->childTail;
+    FibNode * back = node->prev;
+    FibNode * front = node->next;
+    node->prev = NULL;
+    node->next = NULL;
+    node->parent = NULL;
+
+    if (parent->rank == 1) {
+        parent->childHead = NULL;
+        parent->childTail = NULL;
+    } else if (node == head) {
+        front->prev = NULL;
+        parent->childHead = front;
+    } else if (node == tail) {
+        back->next = NULL;
+        parent->childTail = back;
+    }
+
+    parent->rank--;
+}
+
+void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
+    assert(this->ptr->nodeMap.find(elem) != this->ptr->nodeMap.end());
+
+    FibNode * node = this->ptr->nodeMap[elem];
+    if (newKey == node->key) return;
+
+    assert(newKey < node->key);
+
+    node->key = newKey;
+    FibNode * parent = node->parent;
+    bool reverse = this->ptr->reverse;
+
+    if (parent == NULL) {
+        this->ptr->minNode = getMinNode(this->ptr->minNode, node, reverse);
+        return;
+    }
+
+    if (parent->key <= newKey) return;
+    
+    cut(node);
+    this->ptr->rootTail->next = node;
+    node->prev = this->ptr->rootTail;
+    this->ptr->rootTail = node;
+
+    node->marked = false;
+    this->ptr->minNode = getMinNode(this->ptr->minNode, node, reverse); 
+
+    node = parent;
+    parent = parent->parent;
+
+    while (parent != NULL) {
+        if (!node->marked) {
+            node->marked = true;
+            break;
+        }
+
+        cut(node);
+        this->ptr->rootTail->next = node;
+        node->prev = this->ptr->rootTail;
+        this->ptr->rootTail = node;
+
+        node = parent;
+        parent = parent->parent;
+    }
+}

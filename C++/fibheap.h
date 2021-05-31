@@ -11,7 +11,7 @@ public:
     void push(std::string elem, float key);
     std::string top();
     void pop();
-    //void decreaseKey(std::string elem, float newKey);
+    void decreaseKey(std::string elem, float newKey);
     size_t size();
     bool empty();
     ~FibonacciHeap();
