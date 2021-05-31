@@ -26,7 +26,7 @@ struct FibonacciHeap::ClassVars {
 };
 
 FibonacciHeap::FibonacciHeap() {
-    FibonacciHeap(false);
+    *this = FibonacciHeap(false);
 }
 
 FibonacciHeap::FibonacciHeap(bool reverse) {
@@ -163,7 +163,7 @@ FibNode * findMinNode(FibNode *& head, bool reverse) {
     FibNode * minNode = head;
 
     while (ptr != NULL) {
-        minNode = getMinNode(ptr, minNode, reverse);
+        minNode = getMinNode(minNode, ptr, reverse);
         ptr = ptr->next;
     }
 
@@ -207,7 +207,7 @@ void FibonacciHeap::consolidate() {
 
             if (childNode == this->ptr->rootHead) {
                 front->prev = NULL;
-                this->ptr->rootHead = this->ptr->rootHead->next;
+                this->ptr->rootHead = front;
             } else if (childNode == this->ptr->rootTail) {
                 back->next = NULL;
                 this->ptr->rootTail = back;
@@ -246,10 +246,27 @@ void FibonacciHeap::pop() {
     }
 
     FibNode * minNode = this->ptr->minNode;
+    FibNode * back = minNode->prev;
+    FibNode * front = minNode->next;
+    minNode->prev = NULL;
+    minNode->next = NULL;
+
+    if (minNode == this->ptr->rootHead) {
+        front->prev = NULL;
+        this->ptr->rootHead = front;
+    } else if (minNode == this->ptr->rootTail) {
+        back->next = NULL;
+        this->ptr->rootTail = back;
+    }
+
     FibNode * childHead = minNode->childHead;
     FibNode * childTail = minNode->childTail;
+    delete minNode;
 
-    if (childHead == NULL) return;
+    if (childHead == NULL) {
+        this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
+        return;
+    }
 
     FibNode * ptr = childHead;
     while (ptr != NULL) {
@@ -257,8 +274,15 @@ void FibonacciHeap::pop() {
         ptr = ptr->next;
     }
 
-    this->ptr->rootTail->next = childHead;
-    this->ptr->rootTail = childTail;
+    if (childHead != NULL) {
+        this->ptr->rootTail->next = childHead;
+        childHead->prev = this->ptr->rootTail;
+    }
+
+    if (childTail != NULL) {
+        this->ptr->rootTail = childTail;
+    }
+
     consolidate();
     this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
 }
