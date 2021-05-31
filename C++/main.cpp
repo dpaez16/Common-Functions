@@ -23,5 +23,9 @@ int main() {
     t.insert("abcf");
     t.erase("abce");
 
+    Trie t2(t);
+    Trie t3(t2);
+    t3 = t;
+
     return 0;
 }

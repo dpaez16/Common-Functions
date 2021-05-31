@@ -6,8 +6,8 @@
 class Trie {
 public:
     Trie();
-    //Trie(const Trie &);
-    //Trie& operator=(const Trie &);
+    Trie(const Trie &);
+    Trie& operator=(const Trie &);
     void insert(std::string word);
     void erase(std::string word);
     //bool contains(std::string prefix);

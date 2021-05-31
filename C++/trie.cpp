@@ -38,6 +38,38 @@ Trie::Trie() {
     this->ptr->root = createNewNode();
 }
 
+void copy(TrieNode *& root, TrieNode *& otherRoot) {
+    root->terminal = otherRoot->terminal;
+
+    for (int i = 0; i < 256; i++) {
+        if (otherRoot->children[i] == NULL) continue;
+
+        TrieNode * newNode = createNewNode();
+        root->children[i] = newNode;
+
+        copy(root->children[i], otherRoot->children[i]);
+    }
+}
+
+Trie::Trie(const Trie & other) {
+    this->ptr = new ClassVars;
+    this->ptr->size = other.ptr->size;
+    this->ptr->root = createNewNode();
+    copy(this->ptr->root, other.ptr->root);
+}
+
+Trie & Trie::operator=(const Trie & other) {
+    if (this == &other) return *this;
+
+    this->~Trie();
+    this->ptr = new ClassVars;
+    this->ptr->size = other.ptr->size;
+    this->ptr->root = createNewNode();
+    copy(this->ptr->root, other.ptr->root);
+
+    return *this;
+}
+
 Trie::~Trie() {
     cleanup(this->ptr->root);
     delete this->ptr;
