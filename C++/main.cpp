@@ -1,6 +1,7 @@
 #include <bits/stdc++.h>
 #include "fibheap.h"
 #include "graph.h"
+#include "trie.h"
 
 using namespace std;
 
