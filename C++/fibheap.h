@@ -14,7 +14,7 @@ public:
     //void decreaseKey(std::string elem, float newKey);
     size_t size();
     bool empty();
-    //~FibonacciHeap();
+    ~FibonacciHeap();
 
 private:
     void consolidate();

@@ -25,7 +25,7 @@ struct FibonacciHeap::ClassVars {
     std::unordered_map<std::string, FibNode *> nodeMap;
 };
 
-FibonacciHeap::FibonacciHeap(bool reverse) {
+FibonacciHeap::FibonacciHeap(bool reverse = false) {
     this->ptr = new ClassVars;
     this->ptr->size = 0;
     this->ptr->reverse = reverse;
@@ -33,6 +33,14 @@ FibonacciHeap::FibonacciHeap(bool reverse) {
     this->ptr->rootHead = NULL;
     this->ptr->rootTail = NULL;
     this->ptr->nodeMap = std::unordered_map<std::string, FibNode *>();
+}
+
+FibonacciHeap::~FibonacciHeap() {
+    for (std::pair<std::string, FibNode *> kvPair : this->ptr->nodeMap) {
+        delete kvPair.second;
+    }
+
+    delete this->ptr;
 }
 
 FibNode * createFibNode(std::string elem, float key) {
@@ -161,7 +169,7 @@ void FibonacciHeap::consolidate() {
                 mainNode->childTail = childNode;
             }
             mainNode->rank++;
-            
+
             rankMap[rank] = NULL;
             ptr = this->ptr->rootHead;
         }
