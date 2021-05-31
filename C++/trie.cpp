@@ -1,4 +1,5 @@
 #include <cstring>
+#include <stack>
 #include "trie.h"
 
 typedef struct TrieNode TrieNode;
@@ -27,6 +28,7 @@ void cleanup(TrieNode * root) {
         if (root->children[i] == NULL) continue;
 
         cleanup(root->children[i]);
+        root->children[i] = NULL;
     }
 
     delete root;
@@ -159,4 +161,40 @@ void Trie::erase(std::string word) {
 
     cleanup(pivotNode->children[idx]);
     pivotNode->children[idx] = NULL;
+}
+
+std::vector<std::string> Trie::query(std::string prefix) {
+    TrieNode * curr = this->ptr->root;
+    for (size_t i = 0; i < prefix.size(); i++) {
+        int idx = prefix[i];
+
+        if (curr->children[idx] == NULL) return {};
+
+        curr = curr->children[idx];
+    }
+
+    std::stack<std::pair<TrieNode *, std::string>> stk;
+    stk.push({curr, prefix});
+    std::vector<std::string> queryResults;
+
+    while (!stk.empty()) {
+        std::pair<TrieNode *, std::string> p = stk.top();
+        stk.pop();
+
+        TrieNode * curr = p.first;
+        std::string acc = p.second;
+
+        if (curr->terminal) queryResults.push_back(acc);
+
+        for (int i = 0; i < 256; i++) {
+            if (curr->children[i] == NULL) continue;
+
+            char c = i;
+            acc += c;
+
+            stk.push({curr->children[i], acc});
+        }
+    }
+
+    return queryResults;
 }

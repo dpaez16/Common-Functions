@@ -2,6 +2,7 @@
 #define TRIE_H
 
 #include <string>
+#include <vector>
 
 class Trie {
 public:
@@ -10,7 +11,7 @@ public:
     Trie& operator=(const Trie &);
     void insert(std::string word);
     void erase(std::string word);
-    //bool contains(std::string prefix);
+    std::vector<std::string> query(std::string prefix);
     size_t size();
     bool empty();
     ~Trie();
