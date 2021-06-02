@@ -241,7 +241,7 @@ void FibonacciHeap::consolidate() {
 
     while (ptr != NULL) {
         size_t rank = ptr->rank;
-        if (rankMap.find(rank) == rankMap.end()) {
+        if (rankMap.find(rank) == rankMap.end() || rankMap[rank] == NULL) {
             rankMap[rank] = ptr;
             ptr = ptr->next;
         } else if (rankMap[rank] == ptr) {

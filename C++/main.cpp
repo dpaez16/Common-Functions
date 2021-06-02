@@ -24,7 +24,6 @@ int main() {
     unordered_map<string, float> dist = p.first;
     unordered_map<string, string> prev = p.second;
     
-    //cout << "here" << endl;
     cout << dist["a"] << endl;
     cout << dist["b"] << endl;
     cout << dist["c"] << endl;
