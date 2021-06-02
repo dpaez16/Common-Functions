@@ -181,18 +181,16 @@ std::vector<std::string> Trie::query(std::string prefix) {
         std::pair<TrieNode *, std::string> p = stk.top();
         stk.pop();
 
-        TrieNode * curr = p.first;
+        TrieNode * node = p.first;
         std::string acc = p.second;
 
-        if (curr->terminal) queryResults.push_back(acc);
+        if (node->terminal) queryResults.push_back(acc);
 
         for (int i = 0; i < 256; i++) {
-            if (curr->children[i] == NULL) continue;
+            if (node->children[i] == NULL) continue;
 
             char c = i;
-            acc += c;
-
-            stk.push({curr->children[i], acc});
+            stk.push({node->children[i], acc + c});
         }
     }
 
