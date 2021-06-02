@@ -127,8 +127,8 @@ void FibonacciHeap::push(std::string elem, float key) {
 
     FibNode * node = createFibNode(elem, key);
     this->ptr->nodeMap[elem] = node;
-
     this->ptr->size++;
+    
     if (this->ptr->size == 1) {
         this->ptr->rootHead = node;
         this->ptr->rootTail = node;
@@ -182,6 +182,62 @@ std::pair<FibNode *, FibNode *> getNodes(FibNode *& a, FibNode *& b, bool revers
     return a->key < b->key ? p : p2;
 }
 
+std::pair<FibNode *, FibNode *> removeNode(FibNode *& node, FibNode *& head, FibNode *& tail) {
+    if (node == NULL) return {head, tail};
+
+    FibNode * back = node->prev;
+    FibNode * front = node->next;
+    node->next = NULL;
+    node->prev = NULL;
+
+    if (back != NULL && front != NULL) {
+        back->next = front;
+        front->prev = back;
+        return {head, tail};
+    } else if (back == NULL && front == NULL) {
+        return {NULL, NULL};
+    } else if (node == head) {
+        front->prev = NULL;
+        return {front, tail};
+    } else {
+        back->next = NULL;
+        return {head, back};
+    }
+}
+
+void attachChildNode(FibNode *& mainNode, FibNode *& childNode) {
+    childNode->parent = mainNode;
+
+    if (mainNode->rank == 0) {
+        mainNode->childHead = childNode;
+        mainNode->childTail = childNode;
+    } else {
+        mainNode->childTail->next = childNode;
+        childNode->prev = mainNode->childTail;
+        mainNode->childTail = childNode;
+    }
+
+    mainNode->rank++;
+}
+
+std::pair<FibNode *, FibNode *> bumpNodeChildren(FibNode *& node, FibNode *& head, FibNode *& tail) {
+    FibNode * childHead = node->childHead;
+    FibNode * childTail = node->childTail;
+
+    if (childHead == NULL) return {head, tail};
+
+    FibNode * ptr = childHead;
+    while (ptr != NULL) {
+        ptr->parent = head->parent;
+        ptr = ptr->next;
+    }
+
+    tail->next = childHead;
+    childHead->prev = tail;
+
+    return {head, childTail};
+}
+
 void FibonacciHeap::consolidate() {
     std::unordered_map<size_t, FibNode *> rankMap;
     FibNode * ptr = this->ptr->rootHead;
@@ -200,31 +256,11 @@ void FibonacciHeap::consolidate() {
             FibNode * mainNode = nodes.first;
             FibNode * childNode = nodes.second;
             
-            // remove child node from root list
-            FibNode * back = childNode->prev;
-            FibNode * front = childNode->next;
-            childNode->prev = NULL;
-            childNode->next = NULL;
+            std::pair<FibNode *, FibNode *> p = removeNode(childNode, this->ptr->rootHead, this->ptr->rootTail);
+            this->ptr->rootHead = p.first;
+            this->ptr->rootTail = p.second;
 
-            if (childNode == this->ptr->rootHead) {
-                front->prev = NULL;
-                this->ptr->rootHead = front;
-            } else if (childNode == this->ptr->rootTail) {
-                back->next = NULL;
-                this->ptr->rootTail = back;
-            }
-
-            // attach child node to main node
-            childNode->parent = mainNode;
-            if (mainNode->rank == 0) {
-                mainNode->childHead = childNode;
-                mainNode->childTail = childNode;
-            } else {
-                mainNode->childTail->next = childNode;
-                childNode->prev = mainNode->childTail;
-                mainNode->childTail = childNode;
-            }
-            mainNode->rank++;
+            attachChildNode(mainNode, childNode);
 
             rankMap[rank] = NULL;
             ptr = this->ptr->rootHead;
@@ -246,43 +282,15 @@ void FibonacciHeap::pop() {
         return;
     }
 
+    std::pair<FibNode *, FibNode *> p = removeNode(this->ptr->minNode, this->ptr->rootHead, this->ptr->rootTail);
+    this->ptr->rootHead = p.first;
+    this->ptr->rootTail = p.second;
+
     FibNode * minNode = this->ptr->minNode;
-    FibNode * back = minNode->prev;
-    FibNode * front = minNode->next;
-    minNode->prev = NULL;
-    minNode->next = NULL;
-
-    if (minNode == this->ptr->rootHead) {
-        front->prev = NULL;
-        this->ptr->rootHead = front;
-    } else if (minNode == this->ptr->rootTail) {
-        back->next = NULL;
-        this->ptr->rootTail = back;
-    }
-
-    FibNode * childHead = minNode->childHead;
-    FibNode * childTail = minNode->childTail;
+    p = bumpNodeChildren(minNode, this->ptr->rootHead, this->ptr->rootTail);
+    this->ptr->rootHead = p.first;
+    this->ptr->rootTail = p.second;
     delete minNode;
-
-    if (childHead == NULL) {
-        this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
-        return;
-    }
-
-    FibNode * ptr = childHead;
-    while (ptr != NULL) {
-        ptr->parent = NULL;
-        ptr = ptr->next;
-    }
-
-    if (childHead != NULL) {
-        this->ptr->rootTail->next = childHead;
-        childHead->prev = this->ptr->rootTail;
-    }
-
-    if (childTail != NULL) {
-        this->ptr->rootTail = childTail;
-    }
 
     consolidate();
     this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
@@ -296,24 +304,9 @@ void cut(FibNode *& node) {
     }
 
     // remove node from parent's child list
-    FibNode * head = parent->childHead;
-    FibNode * tail = parent->childTail;
-    FibNode * back = node->prev;
-    FibNode * front = node->next;
-    node->prev = NULL;
-    node->next = NULL;
-    node->parent = NULL;
-
-    if (parent->rank == 1) {
-        parent->childHead = NULL;
-        parent->childTail = NULL;
-    } else if (node == head) {
-        front->prev = NULL;
-        parent->childHead = front;
-    } else if (node == tail) {
-        back->next = NULL;
-        parent->childTail = back;
-    }
+    std::pair<FibNode *, FibNode *> p = removeNode(node, parent->childHead, parent->childTail);
+    parent->childHead = p.first;
+    parent->childTail = p.second;
 
     parent->rank--;
 }
@@ -335,19 +328,19 @@ void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
         return;
     }
 
-    if (parent->key <= newKey) return;
+    if (!reverse && parent->key <= newKey) return;
+    if (reverse && parent->key >= newKey) return;
 
     cut(node);
     this->ptr->rootTail->next = node;
     node->prev = this->ptr->rootTail;
     this->ptr->rootTail = node;
-
     node->marked = false;
+
     this->ptr->minNode = getMinNode(this->ptr->minNode, node, reverse); 
 
     node = parent;
     parent = parent->parent;
-
     while (parent != NULL) {
         if (!node->marked) {
             node->marked = true;
@@ -358,6 +351,7 @@ void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
         this->ptr->rootTail->next = node;
         node->prev = this->ptr->rootTail;
         this->ptr->rootTail = node;
+        node->marked = false;
 
         node = parent;
         parent = parent->parent;

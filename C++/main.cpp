@@ -6,27 +6,30 @@
 using namespace std;
 
 int main() {
-    FibonacciHeap heap = FibonacciHeap(false);
-    heap.push("a", 1);
-    heap.push("b", 2);
-    heap.push("c", 10);
-    heap.push("d", -10);
+    Graph g(true, true);
+    g.addEdge("a", "b", 4);
+    g.addEdge("a", "c", 2);
+
+    g.addEdge("b", "c", 3);
+    g.addEdge("b", "d", 2);
+    g.addEdge("b", "e", 3);
+
+    g.addEdge("c", "b", 1);
+    g.addEdge("c", "d", 4);
+    g.addEdge("c", "e", 5);
+
+    g.addEdge("e", "d", 1);
+
+    pair<unordered_map<string, float>, unordered_map<string, string>> p = g.dijkstra("a");
+    unordered_map<string, float> dist = p.first;
+    unordered_map<string, string> prev = p.second;
     
-    cout << heap.top() << endl;
-    heap.pop();
-    cout << heap.top() << endl;
-
-    Trie t;
-    t.insert("abc");
-    t.insert("abcd");
-    t.insert("abce");
-    t.insert("abcf");
-    t.erase("abce");
-
-    vector<string> queryWords = t.query("a");
-    for (string w : queryWords) {
-        cout << w << endl;
-    }
+    //cout << "here" << endl;
+    cout << dist["a"] << endl;
+    cout << dist["b"] << endl;
+    cout << dist["c"] << endl;
+    cout << dist["d"] << endl;
+    cout << dist["e"] << endl;
 
     return 0;
 }
