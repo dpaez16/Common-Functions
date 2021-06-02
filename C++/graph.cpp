@@ -107,10 +107,6 @@ void Graph::setEdgeValue(vertex a, vertex b, float edgeValue) {
     if (!this->ptr->directed) this->ptr->edgeValueMap[edge(b, a)] = edgeValue;
 }
 
-void Graph::addEdge(vertex a, vertex b) {
-    addEdge(a, b, 0);
-}
-
 void Graph::addEdge(vertex a, vertex b, float edgeValue) {
     addVertex(a);
     addVertex(b);
