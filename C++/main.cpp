@@ -21,14 +21,5 @@ int main() {
     g.addEdge("e", "d", 1);
 
     pair<unordered_map<string, float>, unordered_map<string, string>> p = g.dijkstra("a");
-    unordered_map<string, float> dist = p.first;
-    unordered_map<string, string> prev = p.second;
-    
-    cout << dist["a"] << endl;
-    cout << dist["b"] << endl;
-    cout << dist["c"] << endl;
-    cout << dist["d"] << endl;
-    cout << dist["e"] << endl;
-
     return 0;
 }
