@@ -5,8 +5,7 @@
 
 class FibonacciHeap {
 public:
-    FibonacciHeap();
-    FibonacciHeap(bool reverse);
+    FibonacciHeap(bool reverse = false);
     FibonacciHeap(const FibonacciHeap &);
     FibonacciHeap& operator=(const FibonacciHeap &);
     void push(std::string elem, float key);

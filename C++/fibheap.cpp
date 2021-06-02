@@ -25,10 +25,6 @@ struct FibonacciHeap::ClassVars {
     std::unordered_map<std::string, FibNode *> nodeMap;
 };
 
-FibonacciHeap::FibonacciHeap() {
-    *this = FibonacciHeap(false);
-}
-
 FibonacciHeap::FibonacciHeap(bool reverse) {
     this->ptr = new ClassVars;
     this->ptr->size = 0;
