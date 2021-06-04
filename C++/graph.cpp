@@ -278,14 +278,15 @@ Graph::dijkstra(vertex v) {
 
         vertex_set neighbors = getNeighbors(u);
         for (vertex neighbor : neighbors) {
+            if (!pq.contains(neighbor)) continue;
+            
             float alt = dist[u] + getEdgeValue(u, neighbor);
-            if (alt >= dist[neighbor]) continue;
+            if(alt >= dist[neighbor]) continue;
 
             dist[neighbor] = alt;
             prev[neighbor] = u;
 
-            if (!pq.contains(neighbor)) pq.push(neighbor, alt);
-            else pq.decreaseKey(neighbor, alt);
+            pq.decreaseKey(neighbor, alt);
         }
     }
 
@@ -407,12 +408,14 @@ std::vector<edge> Graph::mst() {
 
         vertex_set neighbors = getNeighbors(u);
         for (vertex v : neighbors) {
+            if (!heap.contains(v)) continue;
+
             float edgeWeight = getEdgeValue(u, v);
-            if (heap.contains(v) && cost[v] > edgeWeight) {
-                cost[v] = edgeWeight;
-                prev[v] = u;
-                heap.decreaseKey(v, cost[v]);
-            }
+            if (cost[v] <= edgeWeight) continue;
+
+            cost[v] = edgeWeight;
+            prev[v] = u;
+            heap.decreaseKey(v, cost[v]);
         }
     }
 
