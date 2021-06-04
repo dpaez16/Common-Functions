@@ -21,5 +21,12 @@ int main() {
     g.addEdge("e", "d", 1);
 
     pair<unordered_map<string, float>, unordered_map<string, string>> p = g.dijkstra("a");
+    unordered_map<string, float> dist = p.first;
+    vector<string> vertices = {"a", "b", "c", "d", "e"};
+
+    for (string v : vertices) {
+        cout << "a -> " << v << ": " << dist[v] << endl;
+    }
+
     return 0;
 }

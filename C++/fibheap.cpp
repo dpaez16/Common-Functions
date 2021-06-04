@@ -1,7 +1,6 @@
 #include "fibheap.h"
 
 #include <unordered_map>
-#include <iostream>
 #include <assert.h>
 
 
@@ -192,12 +191,9 @@ std::pair<FibNode *, FibNode *> removeNode(FibNode *& node, FibNode *& head, Fib
     } else if (back == NULL && front == NULL) {
         return {NULL, NULL};
     } else if (back == NULL && front != NULL) {
-        assert(node == head);
         front->prev = NULL;
         return {front, tail};
     } else {
-        assert(back != NULL);
-        assert(node == tail);
         back->next = NULL;
         return {head, back};
     }
@@ -291,17 +287,14 @@ void FibonacciHeap::pop() {
     this->ptr->minNode = findMinNode(this->ptr->rootHead, this->ptr->reverse);
 }
 
-void cut(FibNode *& node) {
-    FibNode * parent = node->parent;
+void cut(FibNode *& node, FibNode *& parent) {
     if (parent == NULL) {
         parent->marked = false;
         return;
     }
 
     // remove node from parent's child list
-    std::cout << "here" << std::endl;
     std::pair<FibNode *, FibNode *> p = removeNode(node, parent->childHead, parent->childTail);
-    std::cout << "after" << std::endl;
     parent->childHead = p.first;
     parent->childTail = p.second;
 
@@ -331,7 +324,8 @@ void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
     if (!reverse && parent->key <= newKey) return;
     if (reverse && parent->key >= newKey) return;
 
-    cut(node);
+    cut(node, parent);
+    node->parent = NULL;
     this->ptr->rootTail->next = node;
     node->prev = this->ptr->rootTail;
     this->ptr->rootTail = node;
@@ -347,7 +341,8 @@ void FibonacciHeap::decreaseKey(std::string elem, float newKey) {
             break;
         }
 
-        cut(node);
+        cut(node, parent);
+        node->parent = NULL;
         this->ptr->rootTail->next = node;
         node->prev = this->ptr->rootTail;
         this->ptr->rootTail = node;
