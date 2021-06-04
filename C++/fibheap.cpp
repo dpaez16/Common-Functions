@@ -46,7 +46,8 @@ void FibonacciHeap::copy(const FibonacciHeap & other) {
 
     for (std::pair<std::string, FibNode *> kvPair : other.ptr->nodeMap) {
         std::string elem = kvPair.first;
-        this->push(elem, kvPair.second->key);
+        float key = kvPair.second->key;
+        this->push(elem, key);
     }
 
     for (std::pair<std::string, FibNode *> kvPair : this->ptr->nodeMap) {
