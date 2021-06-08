@@ -90,7 +90,19 @@ TEST(FibHeap, CtorTests) {
 	FibonacciHeap minHeapCopy(minHeap);
 
 	ASSERT_EQ(minHeapCopy.size(), 9);
+	ASSERT_EQ(minHeap.top(), "1");
 	ASSERT_EQ(minHeapCopy.top(), minHeap.top());
+
+	minHeapCopy.pop();
+	
+	// changes to copy are independent from original
+	ASSERT_EQ(minHeapCopy.size(), minHeap.size() - 1);
+	ASSERT_EQ(minHeap.top(), "1");
+	ASSERT_EQ(minHeapCopy.top(), "2");
+
+	// assignment op test
+	FibonacciHeap minHeapCopyCopy = minHeapCopy;
+	ASSERT_EQ(minHeapCopyCopy.size(), minHeapCopy.size());
 }
 
 int main(int argc, char ** argv) {

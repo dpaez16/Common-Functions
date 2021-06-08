@@ -61,14 +61,24 @@ void FibonacciHeap::copy(const FibonacciHeap & other) {
         FibNode * childTail = otherNode->childTail;
 
         if (parent != NULL) node->parent = this->ptr->nodeMap[parent->elem];
+
         if (next != NULL) node->next = this->ptr->nodeMap[next->elem];
+        else node->next = NULL;
+
         if (prev != NULL) node->prev = this->ptr->nodeMap[prev->elem];
+        else node->prev = NULL;
+
         if (childHead != NULL) node->childHead = this->ptr->nodeMap[childHead->elem];
         if (childTail != NULL) node->childTail = this->ptr->nodeMap[childTail->elem];
 
         node->rank = otherNode->rank;
         node->marked = otherNode->marked;
     }
+
+    FibNode * rootHead = other.ptr->rootHead;
+    FibNode * rootTail = other.ptr->rootTail;
+    if (rootHead != NULL) this->ptr->rootHead = this->ptr->nodeMap[rootHead->elem];
+    if (rootTail != NULL) this->ptr->rootTail = this->ptr->nodeMap[rootTail->elem];
 }
 
 FibonacciHeap::FibonacciHeap(const FibonacciHeap & other) {
