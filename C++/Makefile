@@ -17,4 +17,6 @@ trie.o: trie.h trie.cpp
 	$(CC) $(CC_FLAGS) -c $(^)
 
 clean:
-	rm -f *.gch *.o test
+	rm -f *.gch *.o *.gcno *.gcda test
+	clear
+	clear
