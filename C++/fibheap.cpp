@@ -3,7 +3,6 @@
 #include <unordered_map>
 #include <assert.h>
 
-
 typedef struct FibNode {
     std::string elem;
     float key;
@@ -62,10 +61,10 @@ void FibonacciHeap::copy(const FibonacciHeap & other) {
         FibNode * childTail = otherNode->childTail;
 
         if (parent != NULL) node->parent = this->ptr->nodeMap[parent->elem];
-        if (node->next != NULL) node->next = this->ptr->nodeMap[next->elem];
-        if (node->prev != NULL) node->prev = this->ptr->nodeMap[prev->elem];
-        if (node->childHead != NULL) node->childHead = this->ptr->nodeMap[childHead->elem];
-        if (node->childTail != NULL) node->childTail = this->ptr->nodeMap[childTail->elem];
+        if (next != NULL) node->next = this->ptr->nodeMap[next->elem];
+        if (prev != NULL) node->prev = this->ptr->nodeMap[prev->elem];
+        if (childHead != NULL) node->childHead = this->ptr->nodeMap[childHead->elem];
+        if (childTail != NULL) node->childTail = this->ptr->nodeMap[childTail->elem];
 
         node->rank = otherNode->rank;
         node->marked = otherNode->marked;
