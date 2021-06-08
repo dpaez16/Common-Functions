@@ -1,4 +1,11 @@
 .DS_Store
 __pycache__/
-Makefile
-main.py
+*.gch
+*.gcda
+*.gcno
+*.gcov
+*.o
+*.info
+test
+*_test
+out/

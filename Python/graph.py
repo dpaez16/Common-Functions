@@ -595,7 +595,7 @@ class Graph:
             neighbors = new_G.get_neighbors(sourceVertex)
             for neighbor in neighbors:
                 new_G.remove_edge(sourceVertex, neighbor)
-                if self.is_source_vertex(neighbor):
+                if new_G.is_source_vertex(neighbor):
                     sourceVertices.add(neighbor)
     
         # if there are still edges remaining, then the graph has a cycle ==> no topological sort.
