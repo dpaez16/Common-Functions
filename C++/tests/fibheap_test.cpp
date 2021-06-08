@@ -102,6 +102,7 @@ TEST(FibHeap, CtorTests) {
 
 	// assignment op test
 	FibonacciHeap minHeapCopyCopy = minHeapCopy;
+	minHeapCopyCopy = minHeapCopy;
 	ASSERT_EQ(minHeapCopyCopy.size(), minHeapCopy.size());
 }
 
