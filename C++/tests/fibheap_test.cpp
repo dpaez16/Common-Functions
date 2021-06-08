@@ -75,6 +75,22 @@ TEST(FibHeap, IntegrationTest) {
 	
 	heap.decreaseKey("9", 200);
 	ASSERT_EQ(heap.top(), "9");
+
+	heap.decreaseKey("42", 43);
+	ASSERT_EQ(heap.top(), "9");
+}
+
+TEST(FibHeap, CtorTests) {
+	FibonacciHeap minHeap;
+	for (int i = 0; i < 10; i++) {
+		minHeap.push(to_string(i), i);
+	}
+
+	minHeap.pop();
+	FibonacciHeap minHeapCopy(minHeap);
+
+	ASSERT_EQ(minHeapCopy.size(), 9);
+	ASSERT_EQ(minHeapCopy.top(), minHeap.top());
 }
 
 int main(int argc, char ** argv) {
