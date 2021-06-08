@@ -3,5 +3,9 @@ __pycache__/
 *.gch
 *.gcda
 *.gcno
+*.gcov
 *.o
+*.info
 test
+*_test
+out/
