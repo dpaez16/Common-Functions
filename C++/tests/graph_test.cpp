@@ -112,6 +112,50 @@ TEST(Graph, FloydWarshallTest) {
     }
 }
 
+TEST(Graph, mstTest) {
+    Graph g(false, true);
+
+    g.addEdge("a", "b", 2);
+    g.addEdge("a", "c", 3);
+    g.addEdge("a", "d", 3);
+
+    g.addEdge("b", "c", 4);
+    g.addEdge("b", "e", 3);
+
+    g.addEdge("c", "d", 5);
+    g.addEdge("c", "f", 6);
+    g.addEdge("c", "e", 1);
+
+    g.addEdge("d", "f", 7);
+    
+    g.addEdge("f", "e", 8);
+    g.addEdge("f", "g", 9);
+
+    vector<pair<string, string>> tree = g.mst();
+    vector<pair<string, string>> actualTree = {
+        {"a", "b"},
+        {"a", "d"},
+        {"c", "f"},
+        {"b", "e"},
+        {"c", "e"},
+        {"f", "g"}
+    };
+
+    int n = tree.size();
+    for (int i = 0; i < n; i++) {
+        pair<string, string> edge = actualTree[i];
+        bool found = false;
+        for (int j = 0; j < n; j++) {
+            if (tree[j] != edge) continue;
+
+            found = true;
+            break;
+        }
+
+        ASSERT_TRUE(found);
+    }
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
