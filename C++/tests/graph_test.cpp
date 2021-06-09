@@ -230,6 +230,50 @@ TEST(Graph, stronglyConnectedComponentsTest) {
     }
 }
 
+TEST(Graph, dfsTest) {
+    Graph g(true, false);
+
+    g.addEdge("0", "1");
+    g.addEdge("0", "2");
+    g.addEdge("0", "3");
+
+    g.addEdge("1", "4");
+    g.addEdge("4", "5");
+    g.addEdge("5", "6");
+
+    const vector<string> dfs = g.dfs("0");
+    const vector<string> actualDFS = {"0", "1", "4", "5", "6", "3", "2"};
+
+    ASSERT_EQ(dfs.size(), actualDFS.size());
+
+    const int n = dfs.size();
+    for (int i = 0; i < n; i++) {
+        ASSERT_EQ(dfs[i], actualDFS[i]);
+    }
+}
+
+TEST(Graph, bfsTest) {
+    Graph g(true, false);
+
+    g.addEdge("0", "1");
+    g.addEdge("0", "2");
+    g.addEdge("0", "3");
+
+    g.addEdge("1", "4");
+    g.addEdge("4", "5");
+    g.addEdge("5", "6");
+
+    const vector<string> bfs = g.bfs("0");
+    const vector<string> actualBFS = {"0", "2", "3", "1", "4", "5", "6"};
+
+    ASSERT_EQ(bfs.size(), actualBFS.size());
+
+    const int n = bfs.size();
+    for (int i = 0; i < n; i++) {
+        ASSERT_EQ(bfs[i], actualBFS[i]);
+    }
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
