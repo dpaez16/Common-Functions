@@ -349,7 +349,7 @@ Graph::floydWarshall() {
     std::vector<std::vector<int>> next(n, std::vector<int>(n, -1));
 
     for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < n; i++) {
+        for (size_t j = 0; j < n; j++) {
             vertex a = verticesList[i];
             vertex b = verticesList[j];
 

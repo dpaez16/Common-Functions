@@ -73,6 +73,45 @@ TEST(Graph, BellmanFordTest) {
     ASSERT_EQ(prev["e"], "s");
 }
 
+TEST(Graph, FloydWarshallTest) {
+    Graph g(true, true);
+
+    g.addEdge("0", "2", -2);
+
+    g.addEdge("1", "0", 4);
+    g.addEdge("1", "2", 3);
+
+    g.addEdge("2", "3", 2);
+
+    g.addEdge("3", "1", -1);
+
+    pair<vector<vector<float>>, vector<vector<int>>> p = g.floydWarshall();
+    vector<vector<float>> dist = p.first;
+    vector<vector<int>> next = p.second;
+
+    vector<vector<float>> actualDist = {
+        {0, -1, -2, 0},
+        {4, 0, 2, 4},
+        {5, 1, 0, 2},
+        {3, -1, 1, 0}
+    };
+
+    vector<vector<int>> actualNext = {
+        {0, 2, 2, 2},
+        {0, 1, 0, 0},
+        {3, 3, 2, 3},
+        {1, 1, 1, 3}
+    };
+
+    int n = dist.size();
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            ASSERT_EQ(dist[i][j], actualDist[i][j]);
+            ASSERT_EQ(next[i][j], actualNext[i][j]);
+        }
+    }
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
