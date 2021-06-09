@@ -4,6 +4,16 @@
 
 using namespace std;
 
+bool equalSets(const unordered_set<string> & lhs, const unordered_set<string> & rhs) {
+    if (lhs.size() != rhs.size()) return false;
+
+    for (string elem : lhs) {
+        if (rhs.find(elem) == rhs.end()) return false;
+    }
+
+    return true;
+}
+
 TEST(Graph, DijkstraTest) {
     Graph g(true, true);
 
@@ -187,6 +197,37 @@ TEST(Graph, topologicalSortCycleTest) {
     const vector<string> tps = g.topologicalSort();
 
     ASSERT_EQ(tps.size(), 0);
+}
+
+TEST(Graph, stronglyConnectedComponentsTest) {
+    Graph g(true, false);
+
+    g.addEdge("0", "2");
+    g.addEdge("2", "1");
+    g.addEdge("1", "0");
+
+    g.addEdge("0", "3");
+    g.addEdge("3", "4");
+
+    const vector<unordered_set<string>> scc = g.stronglyConnectedComponents();
+    const vector<unordered_set<string>> actualSCC = {{"0", "1", "2"}, {"3"}, {"4"}};
+
+    ASSERT_EQ(scc.size(), actualSCC.size());
+
+    const int n = actualSCC.size();
+    for (int i = 0; i < n; i++) {
+        const unordered_set<string> component = scc[i];
+        bool found = false;
+
+        for (int j = 0; j < n; j++) {
+            if (!equalSets(component, actualSCC[j])) continue;
+
+            found = true;
+            break;
+        }
+
+        ASSERT_TRUE(found);
+    }
 }
 
 int main(int argc, char ** argv) {
