@@ -20,7 +20,7 @@ TEST(Graph, DijkstraTest) {
 
     g.addEdge("e", "d", 1);
 
-    pair<unordered_map<string, float>, unordered_map<string, string>> p = g.dijkstra("a");
+    const pair<unordered_map<string, float>, unordered_map<string, string>> p = g.dijkstra("a");
     unordered_map<string, float> dist = p.first;
     unordered_map<string, string> prev = p.second;
     
@@ -54,7 +54,7 @@ TEST(Graph, BellmanFordTest) {
 
     g.addEdge("a", "c", 2);
 
-    pair<unordered_map<string, float>, unordered_map<string, string>> p = g.bellmanFord("s");
+    const pair<unordered_map<string, float>, unordered_map<string, string>> p = g.bellmanFord("s");
     unordered_map<string, float> dist = p.first;
     unordered_map<string, string> prev = p.second;
 
@@ -85,25 +85,25 @@ TEST(Graph, FloydWarshallTest) {
 
     g.addEdge("3", "1", -1);
 
-    pair<vector<vector<float>>, vector<vector<int>>> p = g.floydWarshall();
-    vector<vector<float>> dist = p.first;
-    vector<vector<int>> next = p.second;
+    const pair<vector<vector<float>>, vector<vector<int>>> p = g.floydWarshall();
+    const vector<vector<float>> dist = p.first;
+    const vector<vector<int>> next = p.second;
 
-    vector<vector<float>> actualDist = {
+    const vector<vector<float>> actualDist = {
         {0, -1, -2, 0},
         {4, 0, 2, 4},
         {5, 1, 0, 2},
         {3, -1, 1, 0}
     };
 
-    vector<vector<int>> actualNext = {
+    const vector<vector<int>> actualNext = {
         {0, 2, 2, 2},
         {0, 1, 0, 0},
         {3, 3, 2, 3},
         {1, 1, 1, 3}
     };
 
-    int n = dist.size();
+    const int n = dist.size();
     for (int i = 0; i < n; i++) {
         for (int j = 0; j < n; j++) {
             ASSERT_EQ(dist[i][j], actualDist[i][j]);
@@ -131,8 +131,8 @@ TEST(Graph, mstTest) {
     g.addEdge("f", "e", 8);
     g.addEdge("f", "g", 9);
 
-    vector<pair<string, string>> tree = g.mst();
-    vector<pair<string, string>> actualTree = {
+    const vector<pair<string, string>> tree = g.mst();
+    const vector<pair<string, string>> actualTree = {
         {"a", "b"},
         {"a", "d"},
         {"c", "f"},
@@ -141,10 +141,11 @@ TEST(Graph, mstTest) {
         {"f", "g"}
     };
 
-    int n = tree.size();
+    const int n = tree.size();
     for (int i = 0; i < n; i++) {
-        pair<string, string> edge = actualTree[i];
+        const pair<string, string> edge = actualTree[i];
         bool found = false;
+
         for (int j = 0; j < n; j++) {
             if (tree[j] != edge) continue;
 
@@ -154,6 +155,38 @@ TEST(Graph, mstTest) {
 
         ASSERT_TRUE(found);
     }
+}
+
+TEST(Graph, topologicalSortNoCycleTest) {
+    Graph g(true, false);
+
+    g.addEdge("1", "2");
+    g.addEdge("1", "3");
+
+    g.addEdge("2", "3");
+    g.addEdge("2", "4");
+
+    g.addEdge("3", "4");
+    g.addEdge("3", "5");
+
+    const vector<string> tps = g.topologicalSort();
+    const vector<string> actualTPS = {"1", "2", "3", "4", "5"};
+    const int n = tps.size();
+
+    for (int i = 0; i < n; i++) {
+        ASSERT_EQ(tps[i], actualTPS[i]);
+    }
+}
+
+TEST(Graph, topologicalSortCycleTest) {
+    Graph g(true, false);
+
+    g.addEdge("1", "2");
+    g.addEdge("2", "3");
+    g.addEdge("3", "1");
+    const vector<string> tps = g.topologicalSort();
+
+    ASSERT_EQ(tps.size(), 0);
 }
 
 int main(int argc, char ** argv) {
