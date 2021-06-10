@@ -274,6 +274,17 @@ TEST(Graph, bfsTest) {
     }
 }
 
+TEST(Graph, sinkSourceVertexTest) {
+    Graph g(true, false);
+
+    g.addEdge("a", "b");
+    g.addEdge("a", "c");
+
+    ASSERT_TRUE(g.isSourceVertex("a"));
+    ASSERT_TRUE(g.isSinkVertex("b"));
+    ASSERT_TRUE(g.isSinkVertex("c"));
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
