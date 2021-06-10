@@ -153,6 +153,7 @@ void Trie::erase(std::string word) {
     if (!curr->terminal) return;
 
     curr->terminal = false;
+    this->ptr->size--;
     int numChildren = getNumChildren(curr);
     if (numChildren > 0) return;
 
