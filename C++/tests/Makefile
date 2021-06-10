@@ -6,7 +6,7 @@ GTEST=-lgtest -lgtest_main -pthread
 all: fibheap_test graph_test trie_test
 
 cov:
-	gcov ../trie.o
+	gcov ../fibheap.o ../graph.o ../trie.o
 	lcov -c --directory .. --output-file cov.info
 	genhtml cov.info --output-directory out
 
