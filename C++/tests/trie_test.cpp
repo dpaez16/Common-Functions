@@ -44,6 +44,28 @@ TEST(Trie, eraseTest) {
     ASSERT_TRUE(t.empty()) << t.size();
 }
 
+TEST(Trie, constructorsTest) {
+    Trie t;
+    vector<string> words = {"cat", "cats", "catz", "catzz"};
+    for (string word : words) {
+        t.insert(word);
+    }
+
+    Trie tClone(t);
+    ASSERT_EQ(tClone.size(), t.size());
+
+    tClone.erase("cat");
+    ASSERT_EQ(tClone.size() + 1, t.size());
+
+    Trie tCloneClone;
+    tCloneClone = tClone;
+
+    ASSERT_EQ(tCloneClone.size(), tClone.size());
+
+    tCloneClone.erase("cats");
+    ASSERT_EQ(tCloneClone.size() + 1, tClone.size());
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
