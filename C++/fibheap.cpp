@@ -298,12 +298,6 @@ void FibonacciHeap::pop() {
 }
 
 void cut(FibNode *& node, FibNode *& parent) {
-    if (parent == NULL) {
-        parent->marked = false;
-        return;
-    }
-
-    // remove node from parent's child list
     std::pair<FibNode *, FibNode *> p = removeNode(node, parent->childHead, parent->childTail);
     parent->childHead = p.first;
     parent->childTail = p.second;

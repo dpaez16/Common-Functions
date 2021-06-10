@@ -61,23 +61,11 @@ TEST(FibHeap, IntegrationTest) {
 
 	ASSERT_EQ(heap.top(), "98");
 
-	heap.decreaseKey("50", 200);
-	ASSERT_EQ(heap.top(), "50");
-	heap.pop();
+	heap.decreaseKey("5", 101);
+	ASSERT_EQ(heap.top(), "5");
 
-	heap.decreaseKey("0", 200);
-	ASSERT_EQ(heap.top(), "0");
-	heap.pop();
-	
-	heap.decreaseKey("98", 200);
-	ASSERT_EQ(heap.top(), "98");
-	heap.pop();
-	
-	heap.decreaseKey("9", 200);
-	ASSERT_EQ(heap.top(), "9");
-
-	heap.decreaseKey("42", 43);
-	ASSERT_EQ(heap.top(), "9");
+	heap.decreaseKey("6", 102);
+	ASSERT_EQ(heap.top(), "6");
 }
 
 TEST(FibHeap, CtorTests) {
