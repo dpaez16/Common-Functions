@@ -90,7 +90,7 @@ void Graph::flipEdge(vertex a, vertex b) {
 
     float edgeValue = this->ptr->weighted ? getEdgeValue(a, b) : 0;
     removeEdge(a, b);
-    addEdge(a, b, edgeValue);
+    addEdge(b, a, edgeValue);
 }
 
 void Graph::addVertex(vertex v) {

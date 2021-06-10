@@ -306,6 +306,31 @@ TEST(Graph, assignmentOpTest) {
     ASSERT_FALSE(gClone.hasVertex("a"));
 }
 
+TEST(Graph, flipEdgeTest) {
+    Graph g(true, true);
+
+    g.addEdge("a", "b", 1);
+    g.addEdge("b", "c", 2);
+    g.addEdge("a", "c", 3);
+
+    g.flipEdge("a", "c");
+
+    ASSERT_FALSE(g.isAdjacent("a", "c"));
+    ASSERT_TRUE(g.isAdjacent("c", "a"));
+}
+
+TEST(Graph, removeEdgeTest) {
+    Graph g(false, true);
+
+    g.addEdge("a", "b", 1);
+
+    g.removeEdge("b", "c");
+    ASSERT_TRUE(g.isAdjacent("a", "b"));
+
+    g.removeEdge("a", "b");
+    ASSERT_FALSE(g.isAdjacent("a", "b"));
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
