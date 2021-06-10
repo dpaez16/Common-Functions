@@ -50,6 +50,7 @@ Graph & Graph::operator=(const Graph & other) {
 
     this->~Graph();
 
+    this->ptr = new ClassVars;
     this->ptr->directed = other.ptr->directed;
     this->ptr->weighted = other.ptr->weighted;
     this->ptr->vertices = vertex_set(other.ptr->vertices);

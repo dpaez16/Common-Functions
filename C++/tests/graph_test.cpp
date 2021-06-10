@@ -285,6 +285,23 @@ TEST(Graph, sinkSourceVertexTest) {
     ASSERT_TRUE(g.isSinkVertex("c"));
 }
 
+TEST(Graph, assignmentOpTest) {
+    Graph g(true, true);
+
+    g.addEdge("a", "b", 10);
+    g.addEdge("a", "c", 1);
+    g.addEdge("b", "a", -1);
+    g.addEdge("b", "c", 2);
+
+    Graph gClone(false, false);
+    gClone = g;
+
+    gClone.removeEdge("b", "c");
+
+    ASSERT_TRUE(g.isAdjacent("b", "c"));
+    ASSERT_FALSE(gClone.isAdjacent("b", "c"));
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
