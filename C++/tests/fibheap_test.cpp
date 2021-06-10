@@ -27,12 +27,18 @@ TEST(FibHeap, PopTest) {
 	heap.push("b", -5);
 	heap.push("c", 0);
 
+	ASSERT_EQ(heap.size(), 3);
 	ASSERT_EQ(heap.top(), "b");
 	
 	heap.pop();
 
 	ASSERT_EQ(heap.size(), 2);
 	ASSERT_EQ(heap.top(), "c");
+
+	heap.pop();
+
+	ASSERT_EQ(heap.size(), 1);
+	ASSERT_EQ(heap.top(), "a");
 }
 
 TEST(FibHeap, DecreaseKeyTest) {
