@@ -170,16 +170,17 @@ bool Graph::isSinkVertex(vertex v) {
 void Graph::removeVertex(vertex v) {
     if (!hasVertex(v)) return;
 
-    this->ptr->vertices.erase(v);
     vertex_set incomingNeighbors = getIncomingNeighbors(v);
+    vertex_set neighbors = getNeighbors(v);
     for (vertex u : incomingNeighbors) {
         removeEdge(u, v);
     }
 
-    vertex_set neighbors = getNeighbors(v);
     for (vertex u : neighbors) {
         removeEdge(v, u);
     }
+
+    this->ptr->vertices.erase(v);
 }
 
 Graph Graph::reverse() {

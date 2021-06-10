@@ -297,9 +297,13 @@ TEST(Graph, assignmentOpTest) {
     gClone = g;
 
     gClone.removeEdge("b", "c");
+    gClone.removeVertex("a");
 
     ASSERT_TRUE(g.isAdjacent("b", "c"));
     ASSERT_FALSE(gClone.isAdjacent("b", "c"));
+
+    ASSERT_TRUE(g.hasVertex("a"));
+    ASSERT_FALSE(gClone.hasVertex("a"));
 }
 
 int main(int argc, char ** argv) {
