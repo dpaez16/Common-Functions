@@ -27,7 +27,10 @@ jobs:
             cd C++/tests
             make gcov
             cd ../
-            make -f tests/Makefile lcov
+            lcov -c --directory . --output-file cov.info
+            lcov --remove cov.info -o cov_filtered.info \
+              "*/tests/*" \
+              "/usr/include/*"
             bash <(curl -s https://codecov.io/bash) -f cov_filtered.info
 
 workflows:

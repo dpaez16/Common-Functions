@@ -6,15 +6,13 @@ GTEST=-lgtest -lgtest_main -pthread
 all: fibheap_test graph_test trie_test
 
 gcov:
-	gcov ../fibheap.o ../graph.o ../trie.o
+	gcov ../*.o
 
-lcov: 
-	lcov -c --directory . --output-file cov.info
+cov: gcov
+	lcov -c --directory .. --output-file cov.info
 	lcov --remove cov.info -o cov_filtered.info \
 		"*/tests/*" \
 		"/usr/include/*"
-
-cov: gcov lcov
 	genhtml cov_filtered.info --output-directory out
 
 .cpp.o:
