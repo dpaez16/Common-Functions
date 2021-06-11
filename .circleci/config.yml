@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install lcov
-          command: apt install lcov
+          command: apt install -y lcov
       - run:
           name: Build test executables
           command: cd C++/tests && make
