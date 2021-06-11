@@ -11,16 +11,16 @@ jobs:
           command: cd C++/tests && make
       - run:
           name: Run FibonacciHeap tests
-          command: ./fibheap_tests
+          command: ./C++/tests/fibheap_tests
       - run:
           name: Run Graph tests
-          command: ./graph_tests
+          command: ./C++/tests/graph_tests
       - run:
           name: Run Trie tests
-          command: ./trie_tests
+          command: ./C++/tests/trie_tests
       - run:
           name: "Create & upload codecov report"
-          command: make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
+          command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
 
 workflows:
   version: 2
