@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install lcov
-          command: apt install -y lcov
-      - run:
           name: Build test executables
           command: cd C++/tests && make
       - run:
@@ -22,8 +19,8 @@ jobs:
           name: Run Trie tests
           command: ./C++/tests/trie_test
       - run:
-          name: "Create & upload codecov report"
-          command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
+          name: "Upload code coverage"
+          command: cd C++/tests && make cov && cd ../ && bash <(curl -s https://codecov.io/bash)
 
 workflows:
   version: 2

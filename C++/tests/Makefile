@@ -7,6 +7,9 @@ all: fibheap_test graph_test trie_test
 
 cov:
 	gcov ../fibheap.o ../graph.o ../trie.o
+
+cov-local:
+	gcov ../fibheap.o ../graph.o ../trie.o
 	lcov -c --directory .. --output-file cov.info
 	genhtml cov.info --output-directory out
 
