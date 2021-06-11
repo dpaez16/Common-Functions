@@ -23,7 +23,7 @@ jobs:
           command: ./C++/tests/trie_test
       - run:
           name: "Upload code coverage"
-          command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
+          command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov_filtered.info
 
 workflows:
   version: 2
