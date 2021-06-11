@@ -17,7 +17,7 @@ jobs:
           command: ./C++/tests/graph_tests
       - run:
           name: Run Trie tests
-          command: ./C++/tests/trie_tests
+          command: ls && ls C++/tests && ./C++/tests/trie_tests
       - run:
           name: "Create & upload codecov report"
           command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
