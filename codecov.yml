@@ -3,8 +3,6 @@ coverage:
     project:
       default:
         target: 90%
-        paths:
-          - C++/
     patch:
       default:
         target: 90%
