@@ -7,8 +7,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install curl
-          command: apt update && apt -y install curl
+          name: Install curl and lcov
+          command: apt update && apt -y install curl lcov
       - run:
           name: Build test executables
           command: cd C++/tests && make
@@ -23,7 +23,7 @@ jobs:
           command: ./C++/tests/trie_test
       - run:
           name: "Upload code coverage"
-          command: cd C++/tests && make cov && cd ../ && bash <(curl -s https://codecov.io/bash)
+          command: cd C++/tests && make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
 
 workflows:
   version: 2
