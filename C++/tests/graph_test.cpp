@@ -240,6 +240,7 @@ TEST(Graph, dfsTest) {
     g.addEdge("1", "4");
     g.addEdge("4", "5");
     g.addEdge("5", "6");
+    g.addEdge("6", "5");
 
     const vector<string> dfs = g.dfs("0");
     const vector<string> actualDFS = {"0", "1", "4", "5", "6", "3", "2"};
@@ -262,6 +263,7 @@ TEST(Graph, bfsTest) {
     g.addEdge("1", "4");
     g.addEdge("4", "5");
     g.addEdge("5", "6");
+    g.addEdge("6", "5");
 
     const vector<string> bfs = g.bfs("0");
     const vector<string> actualBFS = {"0", "2", "3", "1", "4", "5", "6"};
