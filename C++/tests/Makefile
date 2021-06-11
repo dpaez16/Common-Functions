@@ -8,6 +8,10 @@ all: fibheap_test graph_test trie_test
 cov:
 	gcov ../fibheap.o ../graph.o ../trie.o
 	lcov -c --directory .. --output-file cov.info
+	lcov --remove cov.info -o cov.info \
+		"*/tests/*" \
+		"/usr/include/*" \
+		"10/*"
 	genhtml cov.info --output-directory out
 
 .cpp.o:

@@ -5,8 +5,6 @@ coverage:
         target: 90%
         paths:
           - C++/
-        ignore:
-          - C++/tests/
     patch:
       default:
         target: 90%
