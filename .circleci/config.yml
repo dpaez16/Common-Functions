@@ -21,3 +21,9 @@ jobs:
       - run:
           name: "Create & upload codecov report"
           command: make cov && bash <(curl -s https://codecov.io/bash) -f cov.info
+
+workflows:
+  version: 2
+  run:
+    jobs:
+      - test
