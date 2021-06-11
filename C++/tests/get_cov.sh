@@ -1,11 +1,8 @@
 #!/bin/bash
 
-cd ../
+make gcov
 
-for filename in `ls | egrep '\.cpp'`; 
-do
-    gcov -n -o . $filename > /dev/null; 
-done
+cd ../
 
 lcov -c --directory . --output-file cov.info
 lcov --remove cov.info -o cov_filtered.info \
