@@ -12,6 +12,8 @@ cov:
 		"*/tests/*" \
 		"/usr/include/*" \
 		"10/*"
+
+cov-report: cov
 	genhtml cov.info --output-directory out
 
 .cpp.o:
