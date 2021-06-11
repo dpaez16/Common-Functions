@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Build test executables
-          command: cd Common-Functions/C++/tests && make
+          command: ls && cd Common-Functions/C++/tests && make
       - run:
           name: Run FibonacciHeap tests
           command: ./fibheap_tests
