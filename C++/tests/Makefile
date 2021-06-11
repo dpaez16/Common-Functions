@@ -10,8 +10,7 @@ cov:
 	lcov -c --directory .. --output-file cov.info
 	lcov --remove cov.info -o cov_filtered.info \
 		"*/tests/*" \
-		"/usr/include/*" \
-		"10/*"
+		"/usr/include/*"
 
 cov-report: cov cov_filtered.info
 	genhtml cov_filtered.info --output-directory out
