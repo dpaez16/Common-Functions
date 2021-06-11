@@ -333,6 +333,41 @@ TEST(Graph, removeEdgeTest) {
     ASSERT_FALSE(g.isAdjacent("a", "b"));
 }
 
+TEST(Graph, reverseGraphTest) {
+    Graph g(true, true);
+    
+    g.addEdge("a", "b", 1);
+    g.addEdge("b", "c", 2);
+    g.addVertex("d");
+
+    Graph revG = g.reverse();
+
+    unordered_map<string, unordered_set<string>> edgeMap = g.getEdges();
+    unordered_map<string, unordered_set<string>> revEdgeMap = revG.getEdges();
+
+    unordered_set<string> vertices = g.getVertices();
+    unordered_set<string> revVertices = revG.getVertices();
+
+    for (string u : vertices) {
+        ASSERT_TRUE(edgeMap.find(u) != edgeMap.end());
+        ASSERT_TRUE(revEdgeMap.find(u) != revEdgeMap.end());
+        ASSERT_TRUE(revVertices.find(u) != revVertices.end());
+    }
+
+    for (auto kvPair : edgeMap) {
+        string u = kvPair.first;
+        unordered_set<string> neighbors = kvPair.second;
+
+        for (string v : neighbors) {
+            float weight = g.getEdgeValue(u, v);
+
+            ASSERT_TRUE(revEdgeMap[u].find(v) == revEdgeMap[u].end());
+            ASSERT_TRUE(revEdgeMap[v].find(u) != revEdgeMap[v].end());
+            ASSERT_EQ(revG.getEdgeValue(v, u), weight);
+        }
+    }
+}
+
 int main(int argc, char ** argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
