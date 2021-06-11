@@ -7,6 +7,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install lcov
+          command: sudo apt install lcov
+      - run:
           name: Build test executables
           command: cd C++/tests && make
       - run:
