@@ -50,6 +50,7 @@ Graph & Graph::operator=(const Graph & other) {
 
     this->~Graph();
 
+    this->ptr = new ClassVars;
     this->ptr->directed = other.ptr->directed;
     this->ptr->weighted = other.ptr->weighted;
     this->ptr->vertices = vertex_set(other.ptr->vertices);
@@ -89,7 +90,7 @@ void Graph::flipEdge(vertex a, vertex b) {
 
     float edgeValue = this->ptr->weighted ? getEdgeValue(a, b) : 0;
     removeEdge(a, b);
-    addEdge(a, b, edgeValue);
+    addEdge(b, a, edgeValue);
 }
 
 void Graph::addVertex(vertex v) {
@@ -169,16 +170,17 @@ bool Graph::isSinkVertex(vertex v) {
 void Graph::removeVertex(vertex v) {
     if (!hasVertex(v)) return;
 
-    this->ptr->vertices.erase(v);
     vertex_set incomingNeighbors = getIncomingNeighbors(v);
+    vertex_set neighbors = getNeighbors(v);
     for (vertex u : incomingNeighbors) {
         removeEdge(u, v);
     }
 
-    vertex_set neighbors = getNeighbors(v);
     for (vertex u : neighbors) {
         removeEdge(v, u);
     }
+
+    this->ptr->vertices.erase(v);
 }
 
 Graph Graph::reverse() {
@@ -349,7 +351,7 @@ Graph::floydWarshall() {
     std::vector<std::vector<int>> next(n, std::vector<int>(n, -1));
 
     for (size_t i = 0; i < n; i++) {
-        for (size_t j = 0; j < n; i++) {
+        for (size_t j = 0; j < n; j++) {
             vertex a = verticesList[i];
             vertex b = verticesList[j];
 
