@@ -27,7 +27,7 @@ jobs:
             cd C++/tests
             bash get_cov.sh
             cd ../
-            bash <(curl -s https://codecov.io/bash) -X gcov -f cov_filtered.info
+            bash <(curl -s https://codecov.io/bash) -X gcov -f cov.info
 
 workflows:
   version: 2

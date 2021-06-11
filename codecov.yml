@@ -6,3 +6,6 @@ coverage:
     patch:
       default:
         target: 90%
+
+ignore:
+  - C++/tests
