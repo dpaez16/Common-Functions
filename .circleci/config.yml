@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install curl
-          command: apt -y install curl
+          command: apt update && apt -y install curl
       - run:
           name: Build test executables
           command: cd C++/tests && make
