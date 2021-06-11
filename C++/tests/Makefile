@@ -29,6 +29,3 @@ fibheap_test: fibheap_test.cpp ../fibheap.o
 
 clean:
 	rm -rf *.gch *.o *.gcov *.gcno *.gcda *_test *.info out/
-	clear
-	clear
-
