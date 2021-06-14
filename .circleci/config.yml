@@ -7,8 +7,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install curl and lcov
-          command: apt update && apt -y install curl lcov
+          name: Install curl, lcov, and valgrind
+          command: apt update && apt -y install curl lcov valgrind
       - run:
           name: Build test executables
           command: cd C++ && make
@@ -16,11 +16,20 @@ jobs:
           name: Run FibonacciHeap tests
           command: ./C++/fibheap_test
       - run:
+          name: Run FibonacciHeap memory leak test
+          command: bash ./C++/memory_leak_test.sh ./C++/fibheap_test
+      - run:
           name: Run Graph tests
           command: ./C++/graph_test
       - run:
+          name: Run Graph memory leak test
+          command: bash ./C++/memory_leak_test.sh ./C++/graph_test
+      - run:
           name: Run Trie tests
           command: ./C++/trie_test
+      - run:
+          name: Run Trie memory leak test
+          command: bash ./C++/memory_leak_test.sh ./C++/trie_test
       - run:
           name: "Create code coverage"
           command: |

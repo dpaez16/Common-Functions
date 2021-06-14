@@ -5,7 +5,9 @@ if [ -z "$1" ]; then
 	exit 1
 fi
 
-if [[ ! -z $(valgrind --leak-check=full -q $1 2>&1 | grep "^=") ]]; then
+debug_output=$(valgrind --leak-check=full -q $1 2>&1 | grep "^=")
+if [[ ! -z $debug_output ]]; then
+	echo "$debug_output"
 	echo "Valgrind failed!"
 	exit 1
 fi
