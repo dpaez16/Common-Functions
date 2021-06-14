@@ -1,6 +1,6 @@
 #!/bin/bash
 
-make gcov
+gcov *.o
 lcov -c --directory . --output-file cov.info
 lcov --remove cov.info -o cov_filtered.info \
     "*_test.cpp" \
