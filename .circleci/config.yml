@@ -11,26 +11,21 @@ jobs:
           command: apt update && apt -y install curl lcov
       - run:
           name: Build test executables
-          command: cd C++/tests && make
+          command: cd C++ && make
       - run:
           name: Run FibonacciHeap tests
-          command: ./C++/tests/fibheap_test
+          command: ./C++/fibheap_test
       - run:
           name: Run Graph tests
-          command: ./C++/tests/graph_test
+          command: ./C++/graph_test
       - run:
           name: Run Trie tests
-          command: ./C++/tests/trie_test
+          command: ./C++/trie_test
       - run:
           name: "Create code coverage"
           command: |
-            cd C++/tests
-            make gcov
-            cd ../
-            lcov -c --directory . --output-file cov.info
-            lcov --remove cov.info -o cov_filtered.info \
-              "*/tests/*" \
-              "/usr/include/*"
+            cd C++
+            bash get_cov.sh
             bash <(curl -s https://codecov.io/bash) -f cov_filtered.info
 
 workflows:

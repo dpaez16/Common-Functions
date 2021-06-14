@@ -1,22 +1,34 @@
 CC=g++
-CC_FLAGS=-lm -Wall -O2
+CC_FLAGS=-lm -Wall -fprofile-arcs -ftest-coverage --coverage
+INCS=-I/usr/lib -I/usr/include -I./include
+GTEST=-lgtest -lgtest_main -pthread
 
-build: main.o graph.o fibheap.o trie.o
-	$(CC) $(CC_FLAGS) -o test $(^)
+all: fibheap_test graph_test trie_test
 
-main.o: main.cpp graph.h fibheap.h trie.h
-	$(CC) $(CC_FLAGS) -c $(^)
+gcov:
+	gcov *.o
 
-fibheap.o: fibheap.h fibheap.cpp
-	$(CC) $(CC_FLAGS) -c $(^)
+cov: gcov
+	lcov -c --directory . --output-file cov.info
+	lcov --remove cov.info -o cov_filtered.info \
+		"*_test.cpp" \
+		"/usr/include/*"
+	genhtml cov_filtered.info --output-directory out
 
-graph.o: graph.h graph.cpp
-	$(CC) $(CC_FLAGS) -c $(^)
+src/%.o: src/%.cpp
+	$(CC) $(CC_FLAGS) -c $(<) -o $(*).o $(INCS)
 
-trie.o: trie.h trie.cpp
-	$(CC) $(CC_FLAGS) -c $(^)
+trie_test: trie_test.cpp src/trie.o
+	$(CC) $(<) trie.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
+
+graph_test: graph_test.cpp src/graph.o src/fibheap.o
+	$(CC) $(<) graph.o fibheap.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
+
+fibheap_test: fibheap_test.cpp src/fibheap.o
+	$(CC) $(<) fibheap.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
 
 clean:
-	rm -f *.gch *.o *.gcno *.gcov *.gcda *.info test
+	rm -rf *.gch *.o *.gcov *.gcno *.gcda *_test *.info out/
 	clear
 	clear
+
