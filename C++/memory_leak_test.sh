@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z "$1" ]; then
+if [ ! -f "$1" ]; then
 	echo "Usage: bash memory_leak_test.sh path_of_exe"
 	exit 1
 fi
