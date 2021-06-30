@@ -58,6 +58,38 @@ void DisjointSet::insert(std::string x) {
     this->ptr->size++;
 }
 
+bool isRoot(DisjointSetNode *& node) {
+    DisjointSetNode * parent = node->parent;
+
+    return node == parent;
+}
+
+std::string DisjointSet::find(std::string x) {
+    assert(contains(x));
+    
+    DisjointSetNode * curr = this->ptr->nodeMap[x];
+    if (isRoot(curr)) return x;
+
+    curr->parent = this->ptr->nodeMap[find(curr->parent->elem)];
+    return curr->parent->elem;
+}
+
+void DisjointSet::setUnion(std::string x, std::string y) {
+    if (!contains(x) || !contains(y)) return;
+
+    DisjointSetNode * u = this->ptr->nodeMap[find(x)];
+    DisjointSetNode * v = this->ptr->nodeMap[find(y)];
+
+    if (u->rank == v->rank) {
+        u->rank++;
+        v->parent = u;
+    } else if (u->rank > v->rank) {
+        v->parent = u;
+    } else {
+        u->parent = v;
+    }
+}
+
 DisjointSet::~DisjointSet() {
     for (std::pair<std::string, DisjointSetNode *> kvPair : this->ptr->nodeMap) {
         DisjointSetNode * node = kvPair.second;

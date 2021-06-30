@@ -12,9 +12,9 @@ public:
     //DisjointSet& operator=(const DisjointSet &);
     void insert(std::string x);
     //void remove(std::string x); 
-    //std::string find(std::string x);
+    std::string find(std::string x);
     bool contains(std::string x);
-    //void setUnion(std::string x, std::string y);
+    void setUnion(std::string x, std::string y);
     size_t size();
     bool empty();
     ~DisjointSet();

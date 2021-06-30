@@ -5,10 +5,12 @@
 using namespace std;
 
 TEST(DisjointSet, foo) {
-	DisjointSet d;
+    vector<string> v = {"a", "b", "c", "d"};
+	DisjointSet d(v);
 
-    d.insert("a");
-    d.insert("b");
+    d.setUnion(v[0], v[1]);
+    d.setUnion(v[2], v[3]);
+    d.setUnion(v[0], v[2]);
 }
 
 int main(int argc, char ** argv) {
