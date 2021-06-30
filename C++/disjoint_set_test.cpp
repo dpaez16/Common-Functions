@@ -6,6 +6,9 @@ using namespace std;
 
 TEST(DisjointSet, foo) {
 	DisjointSet d;
+
+    d.insert("a");
+    d.insert("b");
 }
 
 int main(int argc, char ** argv) {
