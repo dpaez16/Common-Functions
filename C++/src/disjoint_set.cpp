@@ -68,9 +68,10 @@ std::string DisjointSet::find(std::string x) {
     assert(contains(x));
     
     DisjointSetNode * curr = this->ptr->nodeMap[x];
-    if (isRoot(curr)) return x;
-
-    curr->parent = this->ptr->nodeMap[find(curr->parent->elem)];
+    if (!isRoot(curr)) {
+        curr->parent = this->ptr->nodeMap[find(curr->parent->elem)];
+    }
+    
     return curr->parent->elem;
 }
 
