@@ -37,6 +37,37 @@ DisjointSet::DisjointSet(std::vector<std::string> & vec) {
     }
 }
 
+void DisjointSet::copy(const DisjointSet & other) {
+    this->ptr = new ClassVars;
+    this->ptr->size = other.ptr->size;
+    
+    for (std::pair<std::string, DisjointSetNode *> kvPair : other.ptr->nodeMap) {
+        std::string elem = kvPair.first;
+        this->insert(elem);
+    }
+
+    for (std::pair<std::string, DisjointSetNode *> kvPair : this->ptr->nodeMap) {
+        std::string elem = kvPair.first;
+        DisjointSetNode * node = kvPair.second;
+
+        DisjointSetNode * otherNode = other.ptr->nodeMap[elem];
+        node->parent = this->ptr->nodeMap[otherNode->parent->elem];
+        node->rank = otherNode->rank;
+    }
+}
+
+DisjointSet::DisjointSet(const DisjointSet & other) {
+    copy(other);
+}
+
+DisjointSet & DisjointSet::operator=(const DisjointSet & other) {
+if (this == &other) return *this;
+
+    this->~DisjointSet();
+    copy(other);
+    return *this;
+}
+
 size_t DisjointSet::size() {
     return this->ptr->size;
 }
@@ -97,5 +128,5 @@ DisjointSet::~DisjointSet() {
         delete node;
     }
 
-    delete this->ptr;
+    delete this->ptr;   
 }

@@ -8,10 +8,9 @@ class DisjointSet {
 public:
     DisjointSet();
     DisjointSet(std::vector<std::string> & vec);
-    //DisjointSet(const DisjointSet &);
-    //DisjointSet& operator=(const DisjointSet &);
+    DisjointSet(const DisjointSet &);
+    DisjointSet& operator=(const DisjointSet &);
     void insert(std::string x);
-    //void remove(std::string x); 
     std::string find(std::string x);
     bool contains(std::string x);
     void setUnion(std::string x, std::string y);
@@ -22,6 +21,8 @@ public:
 private:
     struct ClassVars;
     ClassVars * ptr;
+
+    void copy(const DisjointSet &);
 };
 
 #endif
