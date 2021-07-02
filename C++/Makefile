@@ -21,8 +21,8 @@ graph_test: graph_test.cpp src/graph.o src/fibheap.o
 fibheap_test: fibheap_test.cpp src/fibheap.o
 	$(CC) $(<) fibheap.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
 
-disjoint_set_test: disjoint_set_test.cpp src/disjoint_set.o
-	$(CC) $(<) disjoint_set.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
+disjoint_set_test: disjoint_set_test.cpp src/disjoint_set.o src/graph.o src/fibheap.o
+	$(CC) $(<) fibheap.o graph.o disjoint_set.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
 
 clean:
 	rm -rf *.gch *.o *.gcov *.gcno *.gcda *_test *.info out/
