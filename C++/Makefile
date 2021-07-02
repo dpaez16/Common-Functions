@@ -3,7 +3,7 @@ CC_FLAGS=-lm -Wall -fprofile-arcs -ftest-coverage --coverage
 INCS=-I/usr/lib -I/usr/include -I./include
 GTEST=-lgtest -lgtest_main -pthread
 
-all: fibheap_test graph_test trie_test
+all: fibheap_test graph_test trie_test disjoint_set_test
 
 cov:
 	bash get_cov.sh
@@ -20,6 +20,9 @@ graph_test: graph_test.cpp src/graph.o src/fibheap.o
 
 fibheap_test: fibheap_test.cpp src/fibheap.o
 	$(CC) $(<) fibheap.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
+
+disjoint_set_test: disjoint_set_test.cpp src/disjoint_set.o src/graph.o src/fibheap.o
+	$(CC) $(<) fibheap.o graph.o disjoint_set.o -o $(@) $(GTEST) $(INCS) $(CC_FLAGS)
 
 clean:
 	rm -rf *.gch *.o *.gcov *.gcno *.gcda *_test *.info out/

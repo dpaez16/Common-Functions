@@ -31,6 +31,12 @@ jobs:
           name: Run Trie memory leak test
           command: bash ./C++/memory_leak_test.sh ./C++/trie_test
       - run:
+          name: Run DisjointSet tests
+          command: ./C++/disjoint_set_test
+      - run:
+          name: Run DisjointSet memory leak test
+          command: bash ./C++/memory_leak_test.sh ./C++/disjoint_set_test
+      - run:
           name: "Create code coverage"
           command: |
             cd C++
