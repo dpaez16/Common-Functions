@@ -84,6 +84,23 @@ TEST(DisjointSet, KruskalIntegrationTest) {
     ASSERT_EQ(cost, 17);
 }
 
+TEST(DisjointSet, unionFindTest) {
+    DisjointSet dset;
+    dset.insert("a");
+    dset.insert("b");
+    dset.insert("c");
+    dset.insert("d");
+
+    dset.setUnion("a", "b");
+    dset.setUnion("a", "c");
+    dset.setUnion("d", "a");
+
+    ASSERT_EQ(dset.find("a"), "a");
+    ASSERT_EQ(dset.find("b"), "a");
+    ASSERT_EQ(dset.find("c"), "a");
+    ASSERT_EQ(dset.find("d"), "a");
+}
+
 TEST(DisjointSet, CopyConstructorTest) {
     DisjointSet dset;
     ASSERT_TRUE(dset.empty());
