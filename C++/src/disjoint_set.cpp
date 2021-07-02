@@ -39,7 +39,7 @@ DisjointSet::DisjointSet(std::vector<std::string> & vec) {
 
 void DisjointSet::copy(const DisjointSet & other) {
     this->ptr = new ClassVars;
-    this->ptr->size = other.ptr->size;
+    this->ptr->size = 0;
     
     for (std::pair<std::string, DisjointSetNode *> kvPair : other.ptr->nodeMap) {
         std::string elem = kvPair.first;

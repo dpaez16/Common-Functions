@@ -32,7 +32,7 @@ pair<string, string> getMSTEdge(pair<string, string> & e) {
     return e;
 }
 
-TEST(DisjointSet, Kruskal) {
+TEST(DisjointSet, KruskalIntegrationTest) {
     vector<string> vertices = {"1", "2", "3", "4", "5", "6"};
     Graph g(false, true);
 
@@ -82,6 +82,35 @@ TEST(DisjointSet, Kruskal) {
     ASSERT_TRUE(mst.find({vertices[0], vertices[4]}) != mst.end());
 
     ASSERT_EQ(cost, 17);
+}
+
+TEST(DisjointSet, CopyConstructorTest) {
+    DisjointSet dset;
+    ASSERT_TRUE(dset.empty());
+
+    dset.insert("a");
+    dset.insert("b");
+    dset.insert("c");
+    dset.insert("d");
+    ASSERT_EQ(dset.size(), 4);
+
+    DisjointSet dsetClone(dset);
+    ASSERT_EQ(dset.size(), dsetClone.size());
+
+    dset.setUnion("a", "b");
+    dset.setUnion("a", "c");
+
+    dsetClone.setUnion("c", "d");
+
+    ASSERT_EQ(dset.find("a"), "a");
+    ASSERT_EQ(dset.find("b"), "a");
+    ASSERT_EQ(dset.find("c"), "a");
+    ASSERT_EQ(dset.find("d"), "d");
+
+    ASSERT_EQ(dsetClone.find("a"), "a");
+    ASSERT_EQ(dsetClone.find("b"), "b");
+    ASSERT_EQ(dsetClone.find("c"), "c");
+    ASSERT_EQ(dsetClone.find("d"), "c");
 }
 
 int main(int argc, char ** argv) {
