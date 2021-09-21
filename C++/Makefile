@@ -3,7 +3,7 @@ CC_FLAGS=-lm -Wall -fprofile-arcs -ftest-coverage --coverage
 INCS=-I/usr/lib -I/usr/include -I./include
 GTEST=-lgtest -lgtest_main -pthread
 
-all: fibheap_test graph_test trie_test disjoint_set_test
+all: $(patsubst include/%.h, %_test, $(wildcard include/*.h))
 
 cov:
 	bash get_cov.sh
