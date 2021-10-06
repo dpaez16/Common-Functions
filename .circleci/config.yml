@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  test:
+  cpp:
     docker:
       - image: ptru/gtest
     steps:
@@ -47,4 +47,4 @@ workflows:
   version: 2
   run:
     jobs:
-      - test
+      - cpp
