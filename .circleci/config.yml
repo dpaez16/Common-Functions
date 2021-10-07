@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  cpp:
+  C++:
     docker:
       - image: ptru/gtest
     steps:
@@ -13,35 +13,31 @@ jobs:
           name: Build test executables
           command: cd C++ && make
       - run:
-          name: Run FibonacciHeap tests
-          command: ./C++/fibheap_test
+          name: Run unit tests
+          command: |
+            cd C++/bin
+            for file in *
+            do
+                echo "Running $file";
+                ./$file;
+                printf "\n\n";
+            done
       - run:
-          name: Run FibonacciHeap memory leak test
-          command: bash ./C++/memory_leak_test.sh ./C++/fibheap_test
-      - run:
-          name: Run Graph tests
-          command: ./C++/graph_test
-      - run:
-          name: Run Graph memory leak test
-          command: bash ./C++/memory_leak_test.sh ./C++/graph_test
-      - run:
-          name: Run Trie tests
-          command: ./C++/trie_test
-      - run:
-          name: Run Trie memory leak test
-          command: bash ./C++/memory_leak_test.sh ./C++/trie_test
-      - run:
-          name: Run DisjointSet tests
-          command: ./C++/disjoint_set_test
-      - run:
-          name: Run DisjointSet memory leak test
-          command: bash ./C++/memory_leak_test.sh ./C++/disjoint_set_test
+          name: Run memory leak tests
+          command: |
+            cd C++/bin
+            for file in *
+            do
+                echo "Running $file";
+                bash ../util/memory_leak_test.sh $file
+                printf "\n\n";
+            done
       - run:
           name: "Create code coverage"
           command: |
             cd C++
-            bash get_cov.sh
-            bash <(curl -s https://codecov.io/bash) -f cov_filtered.info
+            bash util/get_cov.sh
+            bash <(curl -s https://codecov.io/bash) -f *.info
 
 workflows:
   version: 2

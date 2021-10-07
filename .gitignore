@@ -7,4 +7,6 @@ __pycache__/
 *.o
 *.info
 *_test
-out/
+coverage/
+bin/
+obj/
