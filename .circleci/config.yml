@@ -20,6 +20,10 @@ jobs:
             do
                 echo "Running $file";
                 ./$file;
+                if [ $? -gt 0 ]
+                then 
+                    exit 1;
+                fi
                 printf "\n\n";
             done
       - run:
@@ -30,6 +34,10 @@ jobs:
             do
                 echo "Running $file";
                 bash ../util/memory_leak_test.sh $file
+                if [ $? -gt 0 ]
+                then 
+                    exit 1;
+                fi
                 printf "\n\n";
             done
       - run:
