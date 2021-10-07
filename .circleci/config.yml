@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  C++:
+  CPP:
     docker:
       - image: ptru/gtest
     steps:
