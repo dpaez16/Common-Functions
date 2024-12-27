@@ -46,9 +46,21 @@ jobs:
             cd C++
             bash util/get_cov.sh
             bash <(curl -s https://codecov.io/bash) -f *.info
+  Perl:
+    docker:
+      - image: perl:5.40.0-slim
+    steps:
+      - checkout
+      - run:
+          name: Run unit tests
+          command: cd Perl && make tests
+      - run:
+          name: Run lint
+          command: cd Perl && make lint
 
 workflows:
   version: 2
   run:
     jobs:
       - CPP
+      - Perl
